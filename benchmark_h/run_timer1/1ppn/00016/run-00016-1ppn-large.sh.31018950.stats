@@ -1,0 +1,236 @@
+Job Statistical Information
+
+ JOB ID                    : 31018950
+ SUB JOB NUM               : -
+ START BULKNO              : -
+ END BULKNO                : -
+ HOST NAME                 : fn01sv01
+ JOB NAME                  : run-00016-1ppn-large.sh
+ JOB TYPE                  : BATCH
+ JOB MODEL                 : NM
+ USER                      : u10243
+ GROUP                     : ra000006
+ RESOURCE UNIT             : rscunit_ft01
+ RESOURCE GROUP            : small
+ APRIORITY                 : 127 <DEFAULT>
+ PRIORITY                  : 127 <DEFAULT>
+ SHELL                     : /bin/bash
+ MAIL SEND FLAG            : ----
+ MAIL ADDRESS              : u10243
+ STEP DEPENDENCY EXP       : 
+ FILE MASK                 : 0022
+ STANDARD OUT FILE         : /vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018950.out
+ STANDARD ERR FILE         : /vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018950.err
+ INFORMATION FILE          : /vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018950.stats
+ PJSUB DIRECTORY           : /vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016
+ FILE SYSTEM NAME          : 
+ APPLICATION NAME          : 
+ NUMA POLICY               : 0
+ SPECIFIED JOB START DATE  : -
+ AUTO RESTART              : no
+ MPI PROC (REQUIRE)        : 16
+ MPI PROC (ALLOC)          : -
+ MPI STATIC PROC (REQUIRE) : 16
+ MPI STATIC PROC (ALLOC)   : -
+ PROC CPU LIMIT            : unlimited <DEFAULT>
+ PROC COREFILE LIMIT       : 0.0 MB (0) <DEFAULT>
+ PROC CREATE PROCESS LIMIT : 4096 <DEFAULT>
+ PROC DATA LIMIT           : unlimited <DEFAULT>
+ PROC LOCKED MEMORY LIMIT  : unlimited <DEFAULT>
+ PROC MESSAGE QUEUE LIMIT  : unlimited <DEFAULT>
+ PROC OPEN FILES LIMIT     : 1024 <DEFAULT>
+ PROC PENDING SIGNAL LIMIT : unlimited <DEFAULT>
+ PROC PERMFILE LIMIT       : unlimited <DEFAULT>
+ PROC STACK LIMIT          : unlimited <DEFAULT>
+ PROC VIRTUAL MEMORY LIMIT : unlimited <DEFAULT>
+ COMMENT                   : 
+ SUPPLEMENTARY INFORMATION : 
+ RETRY NUM                 : 0
+ LAST STATE                : QUE
+ STATE                     : CCL
+ BACKFILL                  : -
+ ACCEPT DATE               : 2024/02/14 20:55:17
+ QUEUED DATE               : 2024/02/14 20:55:17
+ PRO START DATE            : -
+ PRO END DATE              : -
+ JOB START DATE            : -
+ JOB END DATE              : -
+ EPI START DATE            : -
+ EPI END DATE              : -
+ EXIT DATE                 : 2024/02/14 20:58:05
+ JOB DELETE DATE (REQUIRE) : 2024/02/14 20:58:05
+ JOB DELETE DATE           : -
+ ALL PREC SUBJOB EXIT DATE : -
+ HOLD TIME                 : 0
+ LAST HOLD USER            : -
+ HOLD NUM                  : 0
+ PRM DATE                  : -
+ AFFECTED NODE ID          : -
+ EXIT CODE                 : -
+ SIGNAL NO                 : -
+ PJM CODE                  : 1
+ REASON                    : -
+ PRO EXIT CODE             : -
+ EPI EXIT CODE             : -
+ ELAPSE TIME (LIMIT)       : 1 00:00:00 (86400)
+ ELAPSE TIME (USE)         : -
+ USER CPU TIME (USE)       : -
+ SYSTEM CPU TIME (USE)     : -
+ CPU TIME (TOTAL)          : -
+ MEMORY SIZE (LIMIT)       : unlimited <DEFAULT>
+ MEMORY SIZE (ALLOC)       : -
+ MAX MEMORY SIZE (USE)     : -
+ VNODE MEMORY SIZE (LIMIT) : -
+ VNODE MEMORY SIZE (ALLOC) : -
+ VNODE MAX MEMORY SIZE (USE) : -
+ CPU NUM (REQUIRE)         : 768 <DEFAULT>
+ CPU NUM (ALLOC)           : -
+ CPU NUM (USE)             : -
+ ASSISTANT CORE NUM (ALLOC) : -
+ ASSISTANT CORE (USE)      : -
+ ASSISTANT CORE USER CPU TIME (USE) : -
+ ASSISTANT CORE SYSTEM CPU TIME (USE) : -
+ TOFU USER COMM RECV BYTE  : -
+ TOFU USER COMM SEND BYTE  : -
+ TOFU SYSTEM COMM RECV BYTE : -
+ TOFU SYSTEM COMM SEND BYTE : -
+ FJ PROFILER               : -
+ SECTOR CACHE              : -
+ INTRA NODE BARRIER        : -
+ AVG POWER CONSUMPTION OF CORES/CMG (IDEAL) : -
+ ENERGY CONSUMPTION OF CORES/CMG (IDEAL) : -
+ AVG POWER CONSUMPTION OF L2CACHE/CMG (IDEAL) : -
+ ENERGY CONSUMPTION OF L2CACHE/CMG (IDEAL) : -
+ AVG POWER CONSUMPTION OF MEM/CMG (IDEAL) : -
+ ENERGY CONSUMPTION OF MEM/CMG (IDEAL) : -
+ AVG POWER CONSUMPTION OF TOFU (IDEAL) : -
+ ENERGY CONSUMPTION OF TOFU (IDEAL) : -
+ AVG POWER CONSUMPTION OF CPU PERIPHERALS (IDEAL) : -
+ ENERGY CONSUMPTION OF CPU PERIPHERALS (IDEAL) : -
+ AVG POWER CONSUMPTION OF OPTICAL MODULE (IDEAL) : -
+ ENERGY CONSUMPTION OF OPTICAL MODULE (IDEAL) : -
+ AVG POWER CONSUMPTION OF PCI-E (IDEAL) : -
+ ENERGY CONSUMPTION OF PCI-E (IDEAL) : -
+ AVG POWER CONSUMPTION OF NODE (IDEAL) : -
+ ENERGY CONSUMPTION OF NODE (IDEAL) : -
+ AVG POWER CONSUMPTION OF NODE (MEASURED) : -
+ ENERGY CONSUMPTION OF NODE (MEASURED) : -
+ UTILIZATION INFO OF POWER API : -
+ AVG POWER CONSUMPTION OF CPU/PKG : -
+ ENERGY CONSUMPTION OF CPU/PKG : -
+ AVG POWER CONSUMPTION OF MEM/PKG : -
+ ENERGY CONSUMPTION OF MEM/PKG : -
+ AVG POWER CONSUMPTION OF PP0/PKG : -
+ ENERGY CONSUMPTION OF PP0/PKG : -
+ POWER CONSUMPTION STATE   : -
+ POWER CONSUMPTION MEASURE START DATE : -
+ POWER CONSUMPTION MEASURE END DATE : -
+ LLIO SHAREDTMP SIZE (REQUIRE) : 0 <DEFAULT>
+ LLIO LOCALTMP SIZE (REQUIRE) : 0 <DEFAULT>
+ LLIO AUTO READAHEAD       : 1 <DEFAULT>
+ LLIO ASYNC CLOSE          : 0 <DEFAULT>
+ LLIO CN CACHED WRITE SIZE : 67108864 <DEFAULT>
+ LLIO CN CACHE SIZE        : 134217728 <DEFAULT>
+ LLIO CN READ CACHE        : 1 <DEFAULT>
+ LLIO SIO READ CACHE       : 1 <DEFAULT>
+ LLIO STRIPE COUNT         : 24 <DEFAULT>
+ LLIO STRIPE SIZE          : 2097152 <DEFAULT>
+ LLIO UNCOMPLETED FILEINFO PATH : /vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018950.err <DEFAULT>
+ LLIO UNCOMPLETED FILEINFO SIZE : -
+ LLIO PERF PATH            : 
+ POWER CAPPING DATE        : -
+ VNODE NUM (REQUIRE)       : -
+ VNODE NUM (ALLOC)         : -
+ VNODE NUM (USE)           : -
+ 2NDLAYERCACHE CACHE HIT RATIO : -
+ 2NDLAYERCACHE MIN FREE SPACE : -
+ SHAREDTMP MAX USE SPACE   : -
+ LOCALTMP MAX USE SPACE    : -
+ 2NDLAYERCACHE NODE CACHE MIN CACHE HIT RATIO : -
+ SHAREDTMP NODE CACHE MIN CACHE HIT RATIO : -
+ LOCALTMP NODE CACHE MIN CACHE HIT RATIO : -
+ MIN NODE CACHE HIT RATIO FREE SPACE : -
+ 2NDLAYERCACHE READ TRANSFER AMOUNT : -
+ 2NDLAYERCACHE WRITE TRANSFER AMOUNT : -
+ SHAREDTMP READ TRANSFER AMOUNT : -
+ SHAREDTMP WRITE TRANSFER AMOUNT : -
+ LOCALTMP READ TRANSFER AMOUNT : -
+ LOCALTMP WRITE TRANSFER AMOUNT : -
+ 2NDLAYERCACHE OPEN COUNT  : -
+ 2NDLAYERCACHE STATFS COUNT : -
+ 2NDLAYERCACHE SYNC COUNT  : -
+ SHAREDTMP OPEN COUNT      : -
+ LOCALTMP OPEN COUNT       : -
+ 2NDLAYERCACHE FLASH START TIME : -
+ 2NDLAYERCACHE FLASH END TIME : -
+ NODE NUM (REQUIRE)        : 16:4x4:noncont
+ NODE NUM (ALLOC)          : -
+ NODE NUM (USE)            : -
+ NODE NUM (UNUSED)         : -
+ NODE ID (USE)             : -
+ TOFU COORDINATE (USE)     : -
+ NODE ID (RANK)            : -
+ freq (REQUIRE)            : 2200
+ freq (ALLOC)              : 
+ freq (USE)                : 
+ throttling_state (REQUIRE) : 0 <DEFAULT>
+ throttling_state (ALLOC)  : 
+ throttling_state (USE)    : 
+ issue_state (REQUIRE)     : 0 <DEFAULT>
+ issue_state (ALLOC)       : 
+ issue_state (USE)         : 
+ ex_pipe_state (REQUIRE)   : 0 <DEFAULT>
+ ex_pipe_state (ALLOC)     : 
+ ex_pipe_state (USE)       : 
+ eco_state (REQUIRE)       : 2
+ eco_state (ALLOC)         : 
+ eco_state (USE)           : 
+ retention_state (REQUIRE) : 1 <DEFAULT>
+ retention_state (ALLOC)   : 
+ retention_state (USE)     : 
+ retention_state_acores (REQUIRE) : 0 <DEFAULT>
+ retention_state_acores (ALLOC) : 
+ retention_state_acores (USE) : 
+ knob_io (REQUIRE)         : SYSTEM <DEFAULT>
+ knob_io (ALLOC)           : 
+ knob_io (USE)             : 
+ freq_min (REQUIRE)        : 2000 <DEFAULT>
+ freq_min (ALLOC)          : 
+ freq_min (USE)            : 
+ freq_max (REQUIRE)        : 2200 <DEFAULT>
+ freq_max (ALLOC)          : 
+ freq_max (USE)            : 
+ throttling_state_min (REQUIRE) : 0 <DEFAULT>
+ throttling_state_min (ALLOC) : 
+ throttling_state_min (USE) : 
+ throttling_state_max (REQUIRE) : 9 <DEFAULT>
+ throttling_state_max (ALLOC) : 
+ throttling_state_max (USE) : 
+ issue_state_min (REQUIRE) : 0 <DEFAULT>
+ issue_state_min (ALLOC)   : 
+ issue_state_min (USE)     : 
+ issue_state_max (REQUIRE) : 1 <DEFAULT>
+ issue_state_max (ALLOC)   : 
+ issue_state_max (USE)     : 
+ ex_pipe_state_min (REQUIRE) : 0 <DEFAULT>
+ ex_pipe_state_min (ALLOC) : 
+ ex_pipe_state_min (USE)   : 
+ ex_pipe_state_max (REQUIRE) : 1 <DEFAULT>
+ ex_pipe_state_max (ALLOC) : 
+ ex_pipe_state_max (USE)   : 
+ eco_state_min (REQUIRE)   : 0 <DEFAULT>
+ eco_state_min (ALLOC)     : 
+ eco_state_min (USE)       : 
+ eco_state_max (REQUIRE)   : 2 <DEFAULT>
+ eco_state_max (ALLOC)     : 
+ eco_state_max (USE)       : 
+ retention_state_min (REQUIRE) : 0 <DEFAULT>
+ retention_state_min (ALLOC) : 
+ retention_state_min (USE) : 
+ retention_state_max (REQUIRE) : 1 <DEFAULT>
+ retention_state_max (ALLOC) : 
+ retention_state_max (USE) : 
+ jobenv (REQUIRE)          : linux2 <DEFAULT>
+ jobenv (ALLOC)            : 
+ jobenv (USE)              : 
+

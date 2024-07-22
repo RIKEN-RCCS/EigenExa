@@ -1,0 +1,36 @@
+#!/bin/sh
+
+rm -f lib/*.a
+rm -f lib/*.so*
+rmdir lib
+rm -f include/*.mod
+rmdir include
+find . -name "*~" | xargs rm -f
+
+make clean
+rm -f src/Makefile
+rm -f src/Makefile.in
+rm -rf src/.deps
+rm -f benchmark/Makefile
+rm -f benchmark/Makefile.in
+rm -f benchmark/LOG-*
+rm -f benchmark/IN-check
+rm -f benchmark_h/Makefile
+rm -f benchmark_h/Makefile.in
+rm -f benchmark_h/LOG-*
+rm -f benchmark_h/IN-check
+rm -f Makefile
+rm -f Makefile.in
+rm -f config.h
+rm -f config.status
+rm -f stamp-h1
+
+rm -f aclocal.m4
+rm -f config.h.in
+rm -f config.log
+rm -f configure
+rm -f install-sh
+rm -f missing
+rm -f depcomp
+rm -f compile
+rm -rf autom4te.cache

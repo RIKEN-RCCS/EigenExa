@@ -1,0 +1,191 @@
+EigenExa Release Notes
+
+------------------------------------------------------------------------
+2.12 : Octorber 25, 2022)
+  * [Serious] Bug fix for a very rare condensed clustering case of
+    eigenmodes. Modified the deflation couting correctly.
+  * Modify the benchmark options to check the specific kernel.
+  * Modify the collective communication algorithms.
+
+2.11 : December 1, 2021)
+  * [Upgrade] Experimental support for Hermite solver, namely, eigen_h.
+  * [Serious] Fix the numerical error happened to be included in v2.10,
+    where the tall-skinny QR coded in eigen_prd_t4x.F of eigen_sx was
+    too sensitive to treat tiny values and forced-double truncation.
+    But, it might depend on the compiler version and the code generator.
+  * Modify pointer attribution to 'allocatable' to avoid automatic
+    deallocation on the exit of callee routines.
+  * Some code modifications are applied to pass strong debugging tools
+    with respect to Fortran 95 and some of Fortran 2003 extensions.
+  * Fix some bugs, for exmaple, missing private attribution to some
+    variables for OpenMP.
+
+2.10 : October 17, 2021)
+  * [Serious] Bug fix for violation of the result of allreduce in DC.
+    It happened very rarely when data to be transferred was shorter
+    than the number of processes participating.
+  * [Serious] Bug fix for inconsistent API interpretation of DLAED4,
+    when K is less than or equal to 2. This bug happened when a lot
+    of deflations are carried out, and sub-matrices are shrunk tiny as 1
+    or 2. So, it is infrequent to see.
+  * [Serious] Bug fix for non-deterministic behavior of the DC branch,
+    which happened if an uninitialized variable referred in the brach
+    condition, and is affected by the side-effects of other modules,
+    etc. It was fixed when 2.9 was released but noted in the release.
+  * Reduce the internal data capacity in the TRD and DC routines.
+  * Fix the installation of Fortran modules.
+
+2.9  : September 24, 2021)
+  * Modify the flops count precise in DC kernels.
+  * Modify trbak not to multiply D^{-1} and TRSM.
+  * Add enable/disable-switch for building the shared library.
+  * Modify to detect the memory allocation fault.
+
+2.8  : August 20, 2021)
+  * Modify the DC kernel to reduce intermediate buffer storage.
+  * Bug fix on a t1 loop structure
+  * Updated the error check routine
+  * Fixed on Makefile to add the missing fortran module.
+
+2.7 : April 1, 2021)
+  * Modify the compilation rules corresponding to static/shared library
+    defined in src/Makefile.am
+  * Performance tweak with a modification of the compilation options
+    not to use -fPIC when build a static library.
+  * License document is packed as an independent file (the license
+    notice was stated in User's manual for version 2.6).
+
+2.6 : November 1, 2020
+  * Reduced the generation of MPI communicator in the divide and conquer
+    algorithm routine.
+  * Changed calling MPI_Allreduce from the subroutine of MPI library to
+    an in-house/hand-written subroutine equaling the MPI functions due to
+    the violation of numerical reproducibility in some MPI implementations.
+  * Fix module dependencies.
+
+2.5 : August 1, 2019
+  * Refine the data distribution in the divide and conquer algorithm routine.
+
+2.4b : August 20, 2018
+  * [Serious] Bug fix for incorrect data redistribution, which might
+    violate allocated memory.
+    The bug might have happened in the case that the number of processes,
+    P=Px*Py, is large, and Px and Py are not equal but nearly equal.
+  * This version is for only bug fix for the serious one.
+
+2.4p1 : May 25, 2017
+  * [Serious] Bug fix for incorrect data redistribution in eigen_s.
+  * Major change with Autoconf -and- Automake framework
+
+2.4 : April 18, 2017
+  * Major change with Autoconf -and- Automake framework
+
+2.3k2 : April 12, 2017
+  * Communication Avoiding algorithms to the eigen_s driver.
+  * The optional argument nvec is available, which specifies the number of
+    eigenvectors to be computed from the smallest. This version does not
+    employ the special algorithm to reduce the computational cost. It only
+    drops off the unneccessary eigenmodes in the backtransformation.
+
+2.3d : July 07, 2015
+  * Tuned up the parameters according to target architectures.
+  * Introduce a sort routine in bisect.F and bisect2.F for eigenvalues.
+  * Modify the algorithm to create reflector vectors in eigen_prd_t4x.F
+  * Modify the matrix setting routine to load the mtx (Matrix Market)
+    format file via both 'A.mtx' and 'B.mtx'.
+  * Re-format the source code by the fortran-mode of emacs and extra rules.
+
+2.3c : April 23, 2015
+  * Fix bug on flops count of eigen_s which returned incorrect value
+    due to missing initialization in dc2.F.
+    This bug is found in version 2.3a and version 2.3b.
+  * Minor change on timer routines.
+  * Minor change on broadcast algorithm in comm.F.
+
+2.3b : April 15, 2015
+  * Minor change to manage the real constants.
+  * Minor change to use Level 1 and 2 BLAS routines.
+  * Minor change to preserve invalid or oversized matrices.
+  * Minor change of Makefile to allow '-j' option.
+
+2.3a : April 14, 2015
+  * Minor change on thread parallelization of eigne_s.
+  * Minor change of the API's for timer routines.
+  * Fix the unexpected optimization of rounding errors in eigen_dcx.
+
+2.3 : April 12, 2015
+  * Bug fix on the benchmark program.
+  * Refine the race condition in the backtransformation routine.
+  * Introduce Communication Avoiding algorithms to the eigen_s driver.
+
+2.2d : March 20, 2015
+  * Bug fix on the timer print part in trbakwy4.F not to do zero division.
+  * Modify the synchronization point in eigen_s.
+  * Modify thread parallelization in eigen_dc2 and eigen_dcx.
+
+2.2c : March 10, 2015
+  * Bug fix on the benchmark program.
+  * Add the make_inc file for an NEC SX platform.
+
+2.2b : October 30, 2014
+  * Introduce new API to query the current version.
+  * Introduce the constant eigen_NB=64, which refers to the block size
+    for cooperative work with the ScaLAPACK routines.
+  * Correct the requred array size in eigen_mat_dims().
+  * Improve the performance of test matrix generator routine mat_set().
+  * Add the listing option of test matrices in eigenexa_benchmark.
+
+2.2a : June 20, 2014
+  * Fix minor bug of Makefile, miscC.c and etc for BG/Q.
+  * Modify the initialization process not to use invalid communicators.
+  * Comment out the calling BLACS_EXIT in eigen_free().
+
+2.2 : April 10, 2014
+  * Arrange the structure of source directory.
+  * Reversion of the DC routines back to version 1.3a to avoid bug.
+  * Hack miscC.c to be called from IBM BG/Q.
+  * Fix bug on the benchmark program for exceptional case of MPI_COMM_NULL.
+  * Fix bug on eigen_s with splitted communicator.
+  * Update machine depended configuration files.
+  * Experimental support of building a shared library
+
+2.1a : Feb 23, 2014
+  * Fix bug on the benchmark program.
+
+2.1 : Feb 10, 2014
+  * Fix bug on eigen_sx: it gave wrong results when N=3.
+  * Modify the bisect2 by a pivoting algorithm.
+  * Update the test program 'eigenexa_benchmark' in order to check
+    accuracy with several test matrices and computing modes.
+  * Tune performance for K computer and Fujitsu FX10 platforms.
+  * Add make_inc file for a BlueGeneQ platform, but it is not official
+    support, just an experimental.
+
+2.0 : Dec 13, 2013
+  * Add eigen_s, which adopts the conventional 1-stage algorithm.
+  * Add optional modes to compute only eigenvalues and to improve
+    the accuracy of eigenvalues.
+  * Modify to support a thread mode with any number of threads.
+  * Tune performance for K computer and Fujitsu FX10 platforms.
+
+1.3a : Sep 21, 2013
+  * Fix bug on syncronization mechanism of eigen_trbakwyx().
+
+1.3 : Sep 20, 2013
+  * Fix bug on eigen_init() in initialization with MPI_Cart's or
+    MPI_COMM_NULL's.
+  * Add test programs to check several process patterns.
+
+1.2 : Sep 17, 2013
+  * Fix bug on benchmark code in making a random seed.
+  * Modify to support upto 64-thread running.
+
+1.1 : Aug 30, 2013
+  * Fix bug on data-redistribution row vector to column vector
+    when P=p*q and p and q have common divisor except themselves.
+  * Optimize data redistribution algorithm in dc_redist[12].F
+
+1.0 : Aug  1, 2013
+  * This is the first release
+  * Standard eigenvalue problem for a dense symmetric matrix by
+    a novel one-stage algorithm

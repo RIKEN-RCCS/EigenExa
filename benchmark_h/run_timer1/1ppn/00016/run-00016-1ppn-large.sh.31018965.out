@@ -1,0 +1,204 @@
+PJM_LLIO_LOCALTMP_SIZE=0
+LD_LIBRARY_PATH=/opt/FJSVxtclanga/tcsds-1.2.38/lib64
+PJM_JOBNAME=run-00016-1ppn-large.sh
+PJM_MPI_PROC=16
+PJM_RSCUNIT=rscunit_ft01
+MODULES_RUN_QUARANTINE=LD_LIBRARY_PATH LD_PRELOAD
+LANG=C
+PJM_O_MAIL=/var/spool/mail/u10243
+HISTCONTROL=ignoredups
+PJM_PK_retention_state_max=1
+HOSTNAME=k27-4212c
+PJM_ELAPSED_TIME_MODE=fixed
+PJM_O_LOGNAME=u10243
+PJM_LLIO_GFSCACHE_MERGE=/vol0004
+PATH_modshare=/usr/sbin:1:/usr/bin:1:/opt/local/mpiexec:1:/usr/local/sbin:1:/opt/FJSVxtclanga/tcsds-1.2.38/bin:1:/usr/share/Modules/bin:1:/usr/local/bin:1
+PJM_NORESTART=1
+LOADEDMODULES_modshare=lang/tcsds-1.2.38:1
+OMPI_MCA_plm_ple_memory_allocation_policy=interleave_local
+PJM_SUBJOBID=31018965
+PJM_PK_eco_state_min=0
+PJM_PK_issue_state_min=0
+OMPI_CKPTCONFIG=0x00
+PJM_PK_retention_state_min=0
+PLE_MPI_STD_EMPTYFILE=off
+PJM_NODE_ALLOCATION_MODE=noncont
+PJM_STDOUT_PATH=/vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018965.out
+PJM_NODE_QUOTA_LIMIT=18446744073709551615
+PJM_O_HOME=/home/u10243
+S_COLORS=auto
+which_declare=declare -f
+PJM_LLIO_AUTO_READAHEAD=on
+PJM_PK_eco_state_max=2
+LD_LIBRARY_PATH_modshare=/opt/FJSVxtclanga/tcsds-1.2.38/lib64:1
+PJM_LLIO_STRIPE_COUNT=24
+MODULES_CMD=/usr/share/Modules/libexec/modulecmd.tcl
+PJM_PK_throttling_state_min=0
+USER=u10243
+PJM_NODE=16
+PJM_PK_issue_state_max=1
+PJM_JOBID=31018965
+FJSVXTCLANGA=/opt/FJSVxtclanga/tcsds-1.2.38
+PJM_O_SHELL=/bin/bash
+PJM_DPREFIX=#PJM
+PJM_STDERR_PATH=/vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018965.err
+PJM_NODE_MEM_LIMIT=18446744073709551615
+PWD=/vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016
+HOME=/home/u10243
+MODULES_LMCONFLICT_modshare=lang/tcsds-1.2.38&lang:1
+PE=16
+PJM_ELAPSE_LIMIT=86400
+PJM_PK_throttling_state_max=9
+PLE_SCRIPT_TYPE=JOB_SCRIPT
+PJM_LLIO_ASYNC_CLOSE=off
+PJM_O_WORKDIR=/vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016
+PJM_LLIO_CN_CACHED_WRITE_SIZE=67108864
+PJM_MAILOPTION=0x0
+XOS_MMM_L_PAGING_POLICY=demand:demand:prepage
+_LMFILES__modshare=/work/system/modulefiles/lang/tcsds-1.2.38:1
+MODULES_LMALTNAME=lang/tcsds-1.2.38&lang/default&lang
+PJM_O_LANG=C
+PJM_LLIO_ACTIVATE=/vol0001:/vol0002:/vol0003:/vol0004:/vol0005:/vol0006
+PJM_LOCALTMP=/local
+FJPNCKPT_CONFIG=0x00
+PJM_RSCGRP=small
+PJM_PK_issue_state=0
+PJM_O_PATH=/opt/local/openssh/bin:/opt/slurm/bin:/home/apps/oss/mscp/bin:/opt/FJSVxtclanga/tcsds-1.2.38/bin:/opt/local/openssh/bin:/opt/slurm/bin:/home/apps/oss/mscp/bin:/usr/share/Modules/bin:/opt/local/openssh/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u10243/.local/bin:/home/u10243/bin
+TMPDIR=/home/u10243
+LOADEDMODULES=lang/tcsds-1.2.38
+PJM_NET_ROUTE=static
+PJM_PK_freq_min=2000
+PJM_O_HOST=fn01sv01
+PJM_LLIO_CN_READ_CACHE=on
+OMPI_MCA_plm_ple_numanode_assign_policy=simplex
+MAIL=/var/spool/mail/u10243
+MODULES_LMCONFLICT=lang/tcsds-1.2.38&lang
+PJM_PK_eco_state=2
+PPN=1
+PJM_CUSTOM_RESOURCES=estimated-power=1751,exepjrsh=0,nnum_cret=0,test_rsc01=0,eco_state=2,eco_state_max=2,eco_state_min=0,ex_pipe_state=0,ex_pipe_state_max=1,ex_pipe_state_min=0,freq=2200,freq_max=2200,freq_min=2000,issue_state=0,issue_state_max=1,issue_state_min=0,jobenv=linux2,knob_io=SYSTEM,retention_state=1,retention_state_acores=0,retention_state_max=1,retention_state_min=0,throttling_state=0,throttling_state_max=9,throttling_state_min=0
+PJM_SHAREDTMP=/share
+PJM_PK_freq_max=2200
+PJM_LLIO_SHAREDTMP_SIZE=0
+MODULES_LMALTNAME_modshare=lang/tcsds-1.2.38&lang/default&lang:1
+NOD=4x4
+FJSVXTCMPI=/opt/FJSVxtclanga/tcsds-1.2.38
+PJM_NODE_ALLOCATION_IO_MODE=no-io-exclusive
+SHLVL=2
+PJM_NODE_Y=4
+PJM_NODE_X=4
+PJM_JOBDIR=/vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016
+MANPATH=:
+PJM_PK_ex_pipe_state=0
+PJM_LLIO_SIO_READ_CACHE=on
+PJM_PK_freq=2200
+MODULEPATH=/work/system/modulefiles
+PJM_NODE_CPUTIME_LIMIT=18446744073709551615
+PJM_PK_ex_pipe_state_min=0
+LOGNAME=u10243
+PJM_ENVIRONMENT=BATCH
+MODULEPATH_modshare=/work/system/modulefiles:2
+PJM_PK_knob_io=SYSTEM
+PJM_LLIO_PERF=off
+PJM_SHELL=/bin/bash
+PJM_LLIO_CN_CACHE_SIZE=134217728
+PATH=/opt/local/mpiexec:/opt/FJSVxtclanga/tcsds-1.2.38/bin:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u10243/.local/bin:/home/u10243/bin
+PJM_LLIO_UNCOMPLETED_FILEINFO_PATH=/vol0004/ra000006/data/u10243/EigenExa/EigenExa-2.12/benchmark_h/run_timer1/1ppn/00016/run-00016-1ppn-large.sh.31018965.err
+_LMFILES_=/work/system/modulefiles/lang/tcsds-1.2.38
+PJM_LLIO_STRIPE_SIZE=2097152
+MODULESHOME=/usr/share/Modules
+PJM_LLIO_IGNORE=/.vol0001:/.vol0002:/.vol0003:/.vol0005:/.vol0006
+HISTSIZE=1000
+PJM_PK_retention_state=1
+PJM_PK_throttling_state=0
+PJM_PROC_BY_NODE=1
+PJM_PK_ex_pipe_state_max=1
+OMP_NUM_THREADS=48
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+PJM_MPI_SHAPE_Y=4
+PJM_MPI_SHAPE_X=4
+BASH_FUNC_which%%=() {  ( alias;
+ eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+BASH_FUNC_module%%=() {  unset _mlshdbg;
+ if [ "${MODULES_SILENT_SHELL_DEBUG:-0}" = '1' ]; then
+ case "$-" in 
+ *v*x*)
+ set +vx;
+ _mlshdbg='vx'
+ ;;
+ *v*)
+ set +v;
+ _mlshdbg='v'
+ ;;
+ *x*)
+ set +x;
+ _mlshdbg='x'
+ ;;
+ *)
+ _mlshdbg=''
+ ;;
+ esac;
+ fi;
+ unset _mlre _mlIFS;
+ if [ -n "${IFS+x}" ]; then
+ _mlIFS=$IFS;
+ fi;
+ IFS=' ';
+ for _mlv in ${MODULES_RUN_QUARANTINE:-};
+ do
+ if [ "${_mlv}" = "${_mlv##*[!A-Za-z0-9_]}" -a "${_mlv}" = "${_mlv#[0-9]}" ]; then
+ if [ -n "`eval 'echo ${'$_mlv'+x}'`" ]; then
+ _mlre="${_mlre:-}${_mlv}_modquar='`eval 'echo ${'$_mlv'}'`' ";
+ fi;
+ _mlrv="MODULES_RUNENV_${_mlv}";
+ _mlre="${_mlre:-}${_mlv}='`eval 'echo ${'$_mlrv':-}'`' ";
+ fi;
+ done;
+ if [ -n "${_mlre:-}" ]; then
+ eval `eval ${_mlre} /usr/bin/tclsh /usr/share/Modules/libexec/modulecmd.tcl bash '"$@"'`;
+ else
+ eval `/usr/bin/tclsh /usr/share/Modules/libexec/modulecmd.tcl bash "$@"`;
+ fi;
+ _mlstatus=$?;
+ if [ -n "${_mlIFS+x}" ]; then
+ IFS=$_mlIFS;
+ else
+ unset IFS;
+ fi;
+ unset _mlre _mlv _mlrv _mlIFS;
+ if [ -n "${_mlshdbg:-}" ]; then
+ set -$_mlshdbg;
+ fi;
+ unset _mlshdbg;
+ return $_mlstatus
+}
+BASH_FUNC_switchml%%=() {  typeset swfound=1;
+ if [ "${MODULES_USE_COMPAT_VERSION:-0}" = '1' ]; then
+ typeset swname='main';
+ if [ -e /usr/share/Modules/libexec/modulecmd.tcl ]; then
+ typeset swfound=0;
+ unset MODULES_USE_COMPAT_VERSION;
+ fi;
+ else
+ typeset swname='compatibility';
+ if [ -e /usr/share/Modules/libexec/modulecmd-compat ]; then
+ typeset swfound=0;
+ MODULES_USE_COMPAT_VERSION=1;
+ export MODULES_USE_COMPAT_VERSION;
+ fi;
+ fi;
+ if [ $swfound -eq 0 ]; then
+ echo "Switching to Modules $swname version";
+ source /usr/share/Modules/init/bash;
+ else
+ echo "Cannot switch to Modules $swname version, command not found";
+ return 1;
+ fi
+}
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+_=/usr/bin/printenv
+Sat Feb 17 08:23:34 JST 2024
+Sat Feb 17 08:23:34 JST 2024
+Sat Feb 17 08:25:08 JST 2024
+Sat Feb 17 08:25:08 JST 2024

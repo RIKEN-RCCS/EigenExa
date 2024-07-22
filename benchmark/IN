@@ -1,0 +1,68 @@
+!
+! Input file format
+!
+! N bx by mode matrix solver
+!
+! N      : matrix dimension
+! nvec   : the number of eigenvetors to be computed
+! bx     : block width for the forward transformation
+! by     : block width for the backward transformation
+! mode   : solver mode { 0 : only eigenvalues }
+!                      { 1 : eigenvalues and corresponding eigenvectors}
+!                      { 2 : mode 1 + accuracy improvement for eigenvalues}
+! matrix : test matrix { 11 types, 0 ... 10 }
+!          run with -L option shows the list of test matrices
+!          typical ones are as follows
+!          { 0 : Frank matrix}
+!          { 1 : Toeplitz matrix}
+!          { 2 : Random matrix}
+! solver : { 0 : eigen_sx, new algorithm, faster on the K }
+!          { 1 : eigen_s,  conventional algorithm }
+! check_error : { 0 : off, 1 : on }
+!
+! if a line starts from '!', the line is treated as a comment
+!   N  nvec bx  by m t s e
+ 1000     0 48 128 1 0 1 0
+ 1000     0 48 128 1 0 1 0
+ 1000    50 48 128 1 0 1 1
+ 1000    50 48 128 1 0 1 0
+ 1000   250 48 128 1 0 1 1
+ 1000   250 48 128 1 0 1 0
+ 1000  1000 48 128 1 0 1 1
+ 1000  1000 48 128 1 0 1 0
+ 1000     0 48 128 1 0 0 1
+ 1000     0 48 128 1 0 0 0
+ 1000    50 48 128 1 0 0 1
+ 1000    50 48 128 1 0 0 0
+ 1000   250 48 128 1 0 0 1
+ 1000   250 48 128 1 0 0 0
+ 1000  1000 48 128 1 0 0 1
+ 1000  1000 48 128 1 0 0 0
+!-1
+ 5000   250 48 128 1 0 0 1
+ 5000   250 48 128 1 0 0 0
+ 5000  1250 48 128 1 0 0 1
+ 5000  1250 48 128 1 0 0 0
+ 5000  5000 48 128 1 0 0 1
+-1
+ 5000  5000 48 128 1 0 0 0
+ 5000   250 48 128 1 0 1 1
+ 5000   250 48 128 1 0 1 0
+ 5000  1250 48 128 1 0 1 1
+ 5000  1250 48 128 1 0 1 0
+ 5000  5000 48 128 1 0 1 1
+ 5000  5000 48 128 1 0 1 0
+-1
+-1
+-1
+10000 10000 48 128 1 0 0 1
+10000 10000 48 128 1 0 1 1
+20000 10000 48 128 1 0 0 1
+20000 10000 48 128 1 0 1 1
+30000 10000 48 128 1 0 0 1
+30000 10000 48 128 1 0 1 1
+40000 10000 48 128 1 0 0 1
+40000 10000 48 128 1 0 1 1
+50000 10000 48 128 1 0 0 1
+50000 10000 48 128 1 0 1 1
+-1
