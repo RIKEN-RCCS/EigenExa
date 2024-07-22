@@ -37,12 +37,12 @@
 
       type(version_t), public, parameter :: Eigen_Version 
      &     = version_t (
-     &     2, 12, 0,                   ! Major, Minor, Patchlevel
-     &     'Octorber 25, 2022',        ! Release date
+     &     2, 13, 0,                   ! Major, Minor, Patchlevel
+     &     'July 23, 2024',            ! Release date
 #if CODE_AKASHI
-     &     'otome/akashi'              ! Version code
+     &     'tamakazura/akashi'         ! Version code
 #else
-     &     'otome'                     ! Version code
+     &     'tamakazura'                ! Version code
 #endif
      &     )
 

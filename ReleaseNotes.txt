@@ -1,6 +1,10 @@
 EigenExa Release Notes
 
 ------------------------------------------------------------------------
+2.13 : July 23, 2024)
+  * Repository release on the R-CCS github started
+    https://github.com/RIKEN-RCCS/EigenExa
+
 2.12 : Octorber 25, 2022)
   * [Serious] Bug fix for a very rare condensed clustering case of
     eigenmodes. Modified the deflation couting correctly.
