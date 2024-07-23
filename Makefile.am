@@ -2,7 +2,7 @@
 #
 #  File     : Makefile.am
 #
-# Copyright(C) 2012-2021 RIKEN.
+# Copyright(C) 2012-2024 RIKEN.
 # Copyright(C) 2011-2012 Toshiyuki Imamura
 #                        Graduate School of Informatics and Engineering,
 #                        The University of Electro-Communications.
