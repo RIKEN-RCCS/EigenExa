@@ -2,7 +2,7 @@
 #
 #  File     : configure.ac
 #
-# Copyright(C) 2012-2021 RIKEN.
+# Copyright(C) 2012-2023 RIKEN.
 # Copyright(C) 2011-2012 Toshiyuki Imamura
 #                        Graduate School of Informatics and Engineering,
 #                        The University of Electro-Communications.
@@ -33,7 +33,7 @@
 #--------*---------*---------*---------*---------*---------*---------*-*
 
 AC_PREREQ(2.59)
-AC_INIT(EigenExa, [2.11], EigenExa@ml.riken.jp, EigenExa, https://www.r-ccs.riken.jp/labs/lpnctrt/projects/eigenexa/)
+AC_INIT(EigenExa, [2.13], EigenExa@ml.riken.jp, EigenExa, https://https://github.com/RIKEN-RCCS/EigenExa)
 AC_CONFIG_SRCDIR([src/eigen_libs.F])
 AC_CONFIG_HEADER([config.h])
 
@@ -49,6 +49,15 @@ AC_PROG_MAKE_SET
 ## ranlib
 AC_PROG_RANLIB
 
+## check MacOS
+if test `uname` = Darwin; then 
+   OS_MACOS=yes
+   SUFFIX_DYLIB=dylib
+else
+   SUFFIX_DYLIB=so
+fi
+AC_SUBST(SUFFIX_DYLIB)
+AC_SUBST(OS_MACOS)
 
 ## shared lib
 AC_ARG_ENABLE([shared-library],
@@ -122,7 +131,12 @@ AC_ARG_ENABLE([mpi],
       [MPI library.])],
     [
       if test x"${enableval}" = x"intel"; then
+        if test ${CC_ACT} != icc; then
 	    CC=mpiicc
+	fi
+        if test ${CC_ACT} != icx; then
+	    CC=mpiicx
+	fi
 	    F77=mpiifort
 	    FC=mpiifort
 	    echo 'Intel MPI and MKL are forced to use'
@@ -300,7 +314,7 @@ fi
 ## C compiler
 #
 
-eigenexa_default_cc="mpifccpx mpiicc mpixlc_r sxmpic++ mpicc"
+eigenexa_default_cc="mpifccpx mpiicx mpiicc mpixlc_r sxmpic++ mpicc"
 
 # check usablility
 AC_PROG_CC($eigenexa_default_cc)
@@ -311,7 +325,11 @@ AC_MSG_CHECKING([for actual compiler])
 cc_ver_info=$(${CC} -E --version)
 for vtok in ${cc_ver_info} ; do
 
-  if test x"${vtok}" = x"icc"; then
+  if test x"${vtok}" = x"oneAPI"; then
+    CC_ACT="icx"
+    break
+
+  elif test x"${vtok}" = x"icc"; then
     CC_ACT="icc"
     break
 
@@ -327,16 +345,20 @@ if test -z "${CC_ACT}"; then
   CC_ACT=${CC}
 fi
 
-if test ${CC_ACT} = icc -a ${FC_ACT} != ifort; then
+if test ${CC_ACT} = icc -o ${CC_ACT} = icx; then
+if test ${FC_ACT} != ifort; then
       AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
 fi
-if test ${CC_ACT} != icc -a ${FC_ACT} = ifort; then
+fi
+if test ${CC_ACT} != icc -a ${CC_ACT} != icx -a ${FC_ACT} = ifort; then
       AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
 fi
-if test ${CC} = mpiicc -a ${F77} != mpiifort; then
+if test ${CC} = mpiicc -o ${CC} = mpiicx; then
+if test ${F77} != mpiifort; then
       AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
 fi
-if test ${CC} != mpiicc -a ${F77} = mpiifort; then
+fi
+if test ${CC} != mpiicc -a ${CC} != mpiicx -a ${F77} = mpiifort; then
       AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
 fi
 
@@ -381,25 +403,41 @@ if test -n "${LAPACK_LIBS}"; then
  if test x"${FC_ACT}" = x"ifort" -o x"${FC_ACT}" = x"gfortran"; then
   if test x"${with_mkl}" != x -o x"${with_mkl_scalapack}" != x; then
     if test x"${FC_ACT}" = x"ifort"; then
-      OPT_LD_LAPACK+=" -traceback "
+      OPT_LD_LAPACK+=" "
     fi
-    OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
+    if test x"${OS_MACOS}" = x"yes"; then
+      OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib "
+    else
+      OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
+    fi
   fi
   if test x${F77} = xmpiifort -a  x"${with_mkl_scalapack}" != x; then
     OPT_LD_LAPACK+=" -lmkl_scalapack_lp64 "
   fi
   if test x"${with_mkl}" != x -o x"${with_mkl_scalapack}" != x; then
-    OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
+    if test x"${OS_MACOS}" = x"yes"; then
+      OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_mpich_lp64 -liomp5 -lpthread -lm -ldl "
+    else
+      OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
+    fi
     USE_MKL=1
   fi
  fi
 
 elif test x"${FC_ACT}" = x"ifort"; then
-  OPT_LD_LAPACK+=" -traceback -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
+  if test x"${OS_MACOS}" = x"yes"; then
+    OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib "
+  else
+    OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
+  fi
   if test x${F77} = xmpiifort -o  x"${with_mkl_scalapack}" = x; then
     OPT_LD_LAPACK+=" -lmkl_scalapack_lp64 "
   fi
-  OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
+  if test x"${OS_MACOS}" = x"yes"; then
+    OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_mpich_lp64 -liomp5 -lpthread -lm -ldl "
+  else
+    OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
+  fi
   USE_MKL=1
 
 elif test x"${FC_ACT}" = x"gfortran"; then
@@ -446,7 +484,7 @@ if test x"${FC_ACT}" = x"ifort"; then
 #    I_ARCH=" -xHOST "
     I_ARCH=" "
   fi
-  I_BASE=${OMP}" -g -fp-model strict -traceback -inline-level=1 "
+  I_BASE=${OMP}" -g -fp-model strict -inline-level=1 "
 fi
 
 ## For GNU compiler architecture-oriented options
@@ -462,7 +500,7 @@ if test x"${FC_ACT}" = x"gfortran"; then
   elif test ${OPT_SKYLAKE_AVX512} -eq 1 ; then
     G_ARCH=" -march=skylake-avx512 "
   fi
-  G_BASE=" -g -fopenmp -fbacktrace -rdynamic"
+  G_BASE=" -g -fopenmp "
 fi
 
 ## For Fujitsu compiler architecture-oriented options
@@ -618,13 +656,17 @@ fi
 
 # SHARED_LDFLAGS
 if   test x"${FC_ACT}" = x"ifort"; then
-  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.so -W1"
+  if test x"${OS_MACOS}" = x"yes"; then
+    SHARED_LDFLAGS=" -shared"
+  else
+    SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.$SUFFIX_DYLIB -W1"
+  fi
   
 elif test x"${FC_ACT}" = x"gfortran"; then
-  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.so"
+  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.$SUFFIX_DYLIB"
   
 elif test x"${FC_ACT}" = x"mpifrtpx"; then
-  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.so"
+  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.$SUFFIX_DYLIB"
 
 elif test x"${FC_ACT}" = x"mpixlf90_r"; then
   SHARED_LDFLAGS=" -qmkshrobj "
@@ -710,7 +752,11 @@ AC_SUBST(MACRO_FPP)
 # Macro "-fPIC"
 
 if   test x"${FC_ACT}" = x"ifort"; then
-  MACRO_PIC="-fPIC"
+  if test x"${OS_MACOS}" = x"yes"; then
+    MACRO_PIC="-fminshared"
+  else
+    MACRO_PIC="-fPIC"
+  fi
 
 elif test x"${FC_ACT}" = x"gfortran"; then
   MACRO_PIC="-fPIC"
@@ -767,15 +813,12 @@ AM_CONDITIONAL(SKIP_SHARED, test x"${FC_ACT}" = x"sxmpif90")
 AM_CONDITIONAL(SKIP_SHARED, test ${USE_SHARED_LIB} -eq 0)
 AM_CONDITIONAL(ORENAME_SHARED, test x"${FC_ACT}" = x"mpifrtpx")
 AM_CONDITIONAL(SKIP_DEBUG, test x"${DEBUG}" = x0)
+AM_CONDITIONAL(OS_MACOS, test x"${OS_MACOS}" = x"yes")
 
 ## eigen_s version
 #
 
-AC_ARG_ENABLE([eigen_s],
-,
-#    [AS_HELP_STRING(
-#      [--enable-eigen_s@<:@=ARG@:>@],
-#      [set Eigen_S version (from 0 to 1, default = 0) 0:miotsukushi,1:Akashi])] ,
+AC_ARG_ENABLE([eigen_s],,
     [
       if test x"${enableval}" = x"yes"; then
 	    EIGEN_S_ARG=0

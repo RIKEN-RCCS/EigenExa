@@ -4,6 +4,14 @@ EigenExa Release Notes
 2.13 : July 23, 2024)
   * Repository release on the R-CCS github started
     https://github.com/RIKEN-RCCS/EigenExa
+  * Fix some internal errors occurring in a >32bit integer expression.
+    Still, unexpected overflow may happen in huge calculation.
+  * Fix some binding mismatches or instantiation of the modules of the
+    compiler versions in C, C++, F9X, and F2XXX.
+  * Fix Intel oenAPI compiler name from mpiicc to mpiicx, even though 
+    they are not called in this version...
+  * Experimental implementation of a minimal set of caller APIs from
+    C/C++ language environment (confirmed gcc, icc, and DPC++/c++).
 
 2.12 : Octorber 25, 2022)
   * [Serious] Bug fix for a very rare condensed clustering case of
