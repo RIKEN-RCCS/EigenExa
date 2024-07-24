@@ -32,4 +32,4 @@
 #
 #--------*---------*---------*---------*---------*---------*---------*-*
 
-SUBDIRS = src benchmark benchmark_h
+SUBDIRS = src C benchmark benchmark_h

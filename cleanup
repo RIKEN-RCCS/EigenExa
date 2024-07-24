@@ -11,6 +11,9 @@ make clean
 rm -f src/Makefile
 rm -f src/Makefile.in
 rm -rf src/.deps
+rm -f C/Makefile
+rm -f C/Makefile.in
+rm -rf C/.deps
 rm -f benchmark/Makefile
 rm -f benchmark/Makefile.in
 rm -f benchmark/LOG-*
