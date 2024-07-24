@@ -1,6 +1,10 @@
 EigenExa Release Notes
 
 ------------------------------------------------------------------------
+2.13a : July 24, 2024)
+  * Experimental C APIs have been supported in C.
+    But, not yet merged into libEigenExa.(a|so).
+
 2.13 : July 23, 2024)
   * Repository release on the R-CCS github started
     https://github.com/RIKEN-RCCS/EigenExa

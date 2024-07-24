@@ -1,0 +1,52 @@
+#ifdef __cplusplus
+extern  "C" {
+#endif
+//
+// internal Fortran callee APIs
+// 
+#if defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER) /* DPC++/C++ */
+#  define	F_mod(module,func)	module ## _mp_ ## func ## _
+#endif
+#if defined(__ICC) && defined(__INTEL_COMPILER) /* ICC */
+#  define	F_mod(module,func)	module ## _mp_ ## func ## _
+#endif
+#if (!defined(__ICC)) && defined(__GCC_IEC_559) /* GCC */
+#  define	F_mod(module,func)	__ ## module ## _MOD_ ## func
+#endif
+
+#define	F_eigen_init	F_mod(eigen_libs_mod,eigen_init)
+#define	F_eigen_free	F_mod(eigen_libs_mod,eigen_free)
+#define	F_eigen_s	F_mod(eigen_libs_mod,eigen_s)
+#define	F_eigen_sx	eigen_sx_
+#define	F_eigen_h	eigen_h_
+#define	F_eigen_get_version	F_mod(eigen_libs0_mod,eigen_get_version)
+#define	F_eigen_get_procs	F_mod(eigen_libs0_mod,eigen_get_procs)
+#define	F_eigen_get_id	F_mod(eigen_libs0_mod,eigen_get_id)
+#define	F_eigen_get_comm	F_mod(eigen_libs0_mod,eigen_get_comm)
+#define	F_eigen_get_matdims	F_mod(eigen_libs_mod,eigen_get_matdims)
+
+
+extern void F_eigen_init (MPI_Fint *comm_F, char const *order);
+extern void F_eigen_free (void);
+
+extern void F_eigen_s
+	(int *n_F, int *n_vec_F, double *a, int *lda_F, double *w, double *z, int *ldz_F, int *m_f_F, int *m_b_F, char const *mode);
+extern void F_eigen_sx
+	(int *n_F, int *n_vec_F, double *a, int *lda_F, double *w, double *z, int *ldz_F, int *m_f_F, int *m_b_F, char const *mode);
+extern void F_eigen_h
+	(int *n_F, int *n_vec_F, double *a, int *lda_F, double *w, double *z, int *ldz_F, int *m_f_F, int *m_b_F, char const *mode);
+
+extern void F_eigen_get_version
+	(int *version, char *date, char *vcode, int len_data, int len_vcode);
+extern void F_eigen_get_procs
+	(int *nnod, int *x_nnod, int *y_nnod);
+extern void F_eigen_get_id
+	(int *inod, int *x_inod, int *y_inod);
+extern void F_eigen_get_comm
+	(MPI_Fint *comm, MPI_Fint *x_comm, MPI_Fint *y_comm);
+extern void F_eigen_get_matdims
+	(int *n_F, int *nx, int *ny, int *m_f_F, int *m_b_F, char const *mode);
+
+#ifdef __cplusplus
+}
+#endif
