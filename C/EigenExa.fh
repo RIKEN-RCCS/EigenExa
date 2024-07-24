@@ -1,30 +1,21 @@
+#pragma once
+
 #ifdef __cplusplus
 extern  "C" {
 #endif
 //
 // internal Fortran callee APIs
 // 
-#if defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER) /* DPC++/C++ */
-#  define	F_mod(module,func)	module ## _mp_ ## func ## _
-#endif
-#if defined(__ICC) && defined(__INTEL_COMPILER) /* ICC */
-#  define	F_mod(module,func)	module ## _mp_ ## func ## _
-#endif
-#if (!defined(__ICC)) && defined(__GCC_IEC_559) /* GCC */
-#  define	F_mod(module,func)	__ ## module ## _MOD_ ## func
-#endif
-
-#define	F_eigen_init	F_mod(eigen_libs_mod,eigen_init)
-#define	F_eigen_free	F_mod(eigen_libs_mod,eigen_free)
-#define	F_eigen_s	F_mod(eigen_libs_mod,eigen_s)
-#define	F_eigen_sx	eigen_sx_
-#define	F_eigen_h	eigen_h_
-#define	F_eigen_get_version	F_mod(eigen_libs0_mod,eigen_get_version)
-#define	F_eigen_get_procs	F_mod(eigen_libs0_mod,eigen_get_procs)
-#define	F_eigen_get_id	F_mod(eigen_libs0_mod,eigen_get_id)
-#define	F_eigen_get_comm	F_mod(eigen_libs0_mod,eigen_get_comm)
-#define	F_eigen_get_matdims	F_mod(eigen_libs_mod,eigen_get_matdims)
-
+#define	F_eigen_init	eigen_libs_eigen_init_
+#define	F_eigen_free	eigen_libs_eigen_free_
+#define	F_eigen_s	eigen_libs_eigen_s_
+#define	F_eigen_sx	eigen_libs_eigen_sx_
+#define	F_eigen_h	eigen_libs_eigen_h_
+#define	F_eigen_get_version	eigen_libs0_eigen_get_version_
+#define	F_eigen_get_procs	eigen_libs0_eigen_get_procs_
+#define	F_eigen_get_id		eigen_libs0_eigen_get_id_
+#define	F_eigen_get_comm	eigen_libs0_eigen_get_comm_
+#define	F_eigen_get_matdims	eigen_libs_eigen_get_matdims_
 
 extern void F_eigen_init (MPI_Fint *comm_F, char const *order);
 extern void F_eigen_free (void);

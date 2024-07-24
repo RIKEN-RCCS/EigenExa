@@ -3,6 +3,8 @@
 #include <string.h>
 #include <mpi.h>
 
+#pragma once
+
 #ifdef __cplusplus
 extern  "C" {
 #endif

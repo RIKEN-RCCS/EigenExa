@@ -838,6 +838,7 @@ AC_SUBST(EIGEN_S_ARG)
 
 AC_CONFIG_FILES([Makefile
                 src/Makefile
+                C/Makefile
 		benchmark_h/Makefile
 		benchmark/Makefile])
 
