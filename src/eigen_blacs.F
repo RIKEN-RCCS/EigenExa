@@ -67,7 +67,10 @@
       integer          ::  i, j, k, ierr
 
 
-      call BLACS_GET(0, 0, BLACS_ICONTXT_FOR_EIGENEXA)
+!     In Fortran, BLACS context shares the same value with the MPI
+!     commuicator, so it is safe to use TRD_COMM_WORLD as
+!     BLACS_ICONTXT_FOR_EIGENEXA.
+      BLACS_ICONTXT_FOR_EIGENEXA = TRD_COMM_WORLD
 
       allocate(tmpgrid(1:x_nnod, 1:y_nnod),
      &         kk0(1:x_nnod), kk1(1:x_nnod), stat=ierr)
