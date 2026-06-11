@@ -584,7 +584,7 @@ else
   #if   test x"${FC_ACT}" = x"ifort"; then
   if   test x"${FC_ACT}" = x"ifx"; then
     #FFLAGS=${I_BASE}" -O0 "${I_ARCH}" -W1 -Winline"
-    FFLAGS=${I_BASE}" -O0 "${I_ARCH}
+    FFLAGS=${I_BASE}" -O3 "${I_ARCH}
     
   elif test x"${FC_ACT}" = x"gfortran"; then
     FFLAGS=${G_BASE}" -O3 "${G_ARCH}
@@ -634,7 +634,7 @@ fi
 #if   test x"${FC_ACT}" = x"ifort"; then
 if   test x"${FC_ACT}" = x"ifx"; then
   #FFLAGS0=${I_BASE}" -Ofast -W1 -Winline"
-  FFLAGS0=${I_BASE}" -O3 "
+  FFLAGS0=${I_BASE}" -O0 "
   
 elif test x"${FC_ACT}" = x"gfortran"; then
   FFLAGS0=${G_BASE}" -O0"
@@ -685,7 +685,7 @@ fi
 #if   test x"${FC_ACT}" = x"ifort"; then
 if   test x"${FC_ACT}" = x"ifx"; then
   #CFLAGS0=${I_BASE}" -O3 -Wall -Wextra  -Wcheck -Wpointer-arith -Wuninitialized" 
-  CFLAGS0=${I_BASE}" -O3 -Wall -Wextra -Wpointer-arith -Wuninitialized" 
+  CFLAGS0=${I_BASE}" -O0 -Wall -Wextra -Wpointer-arith -Wuninitialized" 
   
 elif test x"${FC_ACT}" = x"gfortran"; then
   CFLAGS0=${G_BASE}" -O0 -Wall"
