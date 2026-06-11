@@ -77,9 +77,6 @@
 !
 !--------*---------*---------*---------*---------*---------*---------*-*
 
-!==>!!OCL NOEVAL
-!===<!OCL NOFP_CONTRACT
-!OCL NOFP_RELAXED
       subroutine eigen_prd_compute_u(
      &     a, nm,
      &     u_x, u_y, nv,

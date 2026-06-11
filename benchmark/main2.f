@@ -8,7 +8,9 @@
 ! Benchmarking and verification of the EigenExa solver kernels
 !
 !
-! Copyright(C) 2012-2024 RIKEN.
+! Copyright(C) 2012-2025 RIKEN.
+! Copyright(C) 2023-2024 Mikihiro Hayashi
+!                        University of Fukui.
 ! Copyright(C) 2011-2012 Toshiyuki Imamura
 !                        Graduate School of Informatics and Engineering,
 !                        The University of Electro-Communications.
@@ -375,7 +377,6 @@
 ! mode='O' is neccessary for performance
 ! and memory reduction at error check
           call eigen_get_matdims(n, nm, ny, mode='O')
-
           if (nm <= 0 .or. ny <= 0) then
             print*,"oversized problem", nm, ny
             call flush(6)
@@ -413,10 +414,18 @@
           if (msolver == 0) then
             call eigen_sx(n, nvec, a, nm, w, z, nm,
      &                m_forward=m, m_backward=mb, mode=mode)
-          else
+          else if (msolver == 1) then
             call eigen_s (n, nvec, a, nm, w, z, nm,
 !           call eigen_s0 (n, nvec, a, nm, w, z, nm,
      &                m_forward=m, m_backward=mb, mode=mode)
+          else if (msolver == 2) then
+            call eigen_FS (n, nvec, a, nm, w, z, nm,
+     &                m_forward=m, m_backward=mb, mode=mode,
+     &                precision=32)
+          else
+            call eigen_FS (n, nvec, a, nm, w, z, nm,
+     &                m_forward=m, m_backward=mb, mode=mode,
+     &                precision=64)
           end if
 
           flops = a(1, 1)
@@ -439,8 +448,10 @@
 
           if (msolver == 0) then
             print*,"Solver = eigen_sx / via penta-diagonal format"
+          else if (msolver == 1) then
+            print*,"Solver = eigen_FS_64  / via tri-diagonal format"
           else
-            print*,"Solver = eigen_s  / via tri-diagonal format"
+            print*,"Solver = eigen_FS_32  / via tri-diagonal format"
           end if
           print*,"Block width = ", m, "/", mb
           print*,"NUM.OF.PROCESS=",nnod,"(",x_nnod,y_nnod,")"
@@ -488,7 +499,9 @@
           end if
 
           if (check_accuracy) then
+
             call w_test( n, w, mtype)
+
           end if
 
         end if
@@ -510,7 +523,7 @@
                   if ( nvec > 0 ) then
                     call mat_set(n, a(1,1), nm, mtype)
                     call ev_test(n, nvec, 
-     &                   a(1,1), nm, w(1), z(1,1), nm, mode)
+     &                   a(1,1), nm, w(1), z(1,1), nm, msolver, mode)
                   end if
                 end if
               end if
@@ -529,6 +542,7 @@
           print*,"==================================================="
      &         //  "==="
           print*,""
+          
         end if
 
         call MPI_Barrier(MPI_COMM_WORLD, ierror)

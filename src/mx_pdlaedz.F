@@ -41,10 +41,9 @@
 !     .. Local Scalars ..
 !     
       INTEGER            COL, I, IBUF, ICTXT, IIQ, IIZ1, IIZ2, IQCOL,
-     &     IQROW, IZ1, IZ1COL, IZ1ROW, IZ2, IZ2COL,
+     &     IQROW, IZ, IZ1, IZ1COL, IZ1ROW, IZ2, IZ2COL,
      &     IZ2ROW, J, JJQ, JJZ1, JJZ2, MYCOL, MYROW, N2,
      &     NB, NBLOC, NPCOL, NPROW, NQ1, NQ2, ZSIZ
-      INTEGER(8) :: IZ_I8
       integer :: ierr
 !     ..
 !     .. Intrinsic Functions ..
@@ -64,8 +63,8 @@
 !     .. Executable Statements ..
 !     
 !     This is just to keep ftnchek and toolpack/1 happy
-!      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 !     
       ICTXT = DESCQ( CTXT_ )
       NB = DESCQ( NB_ )
@@ -91,14 +90,13 @@
          I = MOD( MYCOL + NPCOL - MOD( IZ1COL, NPCOL ), NPCOL )
          NBLOC = ( NQ1-1 ) / NB + 1
 !$OMP PARALLEL DO
-!$OMP+         PRIVATE(J,ZSIZ,IZ1,IZ_I8)
+!$OMP+         PRIVATE(J,ZSIZ,IZ1,IZ)
          DO J = 1, NBLOC
             IZ1 = (J-1)*NB
-            IZ_I8 = INT(I,8)*INT(NB,8) + 1 +
-     &              INT(J-1,8)*INT(NB,8)*INT(NPCOL,8)
+            IZ = I*NB + 1 + (J-1)*NB*NPCOL
             ZSIZ = MIN( NB, NQ1-IZ1 )
             IF ( ZSIZ > 0 ) THEN
-               CALL DCOPY( ZSIZ, WORK(1+IZ1), 1, TEMP(IZ_I8), 1)
+               CALL DCOPY( ZSIZ, WORK(1+IZ1), 1, TEMP(IZ), 1)
             END IF
          END DO
 !$OMP END PARALLEL DO
@@ -114,14 +112,13 @@
          I = MOD( MYCOL + NPCOL - MOD( IZ2COL, NPCOL ), NPCOL )
          NBLOC = ( NQ2-1 ) / NB + 1
 !$OMP PARALLEL DO
-!$OMP+         PRIVATE(J,ZSIZ,IZ2,IZ_I8)
+!$OMP+         PRIVATE(J,ZSIZ,IZ2,IZ)
          DO J = 1, NBLOC
             IZ2 = (J-1)*NB
-            IZ_I8 = INT(I,8)*INT(NB,8) + N1 + 1 +
-     &              INT(J-1,8)*INT(NB,8)*INT(NPCOL,8)
+            IZ = NB*I + N1 + 1 + (J-1)*NB*NPCOL
             ZSIZ = MIN( NB, NQ2-IZ2 )
             IF ( ZSIZ > 0 ) THEN
-               CALL DCOPY( ZSIZ, WORK(1+IZ2), 1, TEMP(IZ_I8), 1)
+               CALL DCOPY( ZSIZ, WORK(1+IZ2), 1, TEMP(IZ), 1)
             END IF
          END DO
 !$OMP END PARALLEL DO

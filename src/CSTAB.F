@@ -11,21 +11,16 @@
 
       module CSTAB_mod
 
-
       implicit none
       private
+
 
       public :: CSTAB_get_optdim
       public :: CSTAB_adjust_base
       public :: CSTAB_adjust_page
-      public :: get_delta
       public :: CSTAB_round_offset
       public :: CSTAB_round_offset_h
 
-      interface get_delta
-        module procedure get_delta_r
-        module procedure get_delta_h
-      end interface get_delta
       interface CSTAB_adjust_base
         module procedure CSTAB_adjust_base_r
         module procedure CSTAB_adjust_base_h
@@ -34,8 +29,6 @@
         module procedure CSTAB_adjust_page_r
         module procedure CSTAB_adjust_page_h
       end interface CSTAB_adjust_page
-
-!--------*---------*---------*---------*---------*---------*---------*-*
 
       contains
 
@@ -129,30 +122,6 @@
       return
 
       end subroutine CSTAB_get_optdim
-!--------*---------*---------*---------*---------*---------*---------*-*
-
-      subroutine get_delta_r(a,b,offset)
-
-      real(8), intent(in)    :: a(*)
-      real(8), intent(in)    :: b(*)
-      integer, intent(out)   :: offset
-      integer, intrinsic     :: loc
-
-      offset = INT(loc(a) - loc(b), 8)
-      
-      end subroutine get_delta_r
-
-      subroutine get_delta_h(a,b,offset)
-
-      complex(8), intent(in) :: a(*)
-      complex(8), intent(in) :: b(*)
-      integer, intent(out)   :: offset
-      integer, intrinsic     :: loc
-      
-      offset = INT(loc(a) - loc(b), 8)
-      
-      end subroutine get_delta_h
-!--------*---------*---------*---------*---------*---------*---------*-*
 
 !--------*---------*---------*---------*---------*---------*---------*-*
 !     
@@ -180,14 +149,14 @@
 
       subroutine CSTAB_adjust_base_r(a,b,offset)
 
-      real(8), intent(in)    :: a(*)
-      real(8), intent(in)    :: b(*)
-      integer, intent(out)   :: offset
+      real(8)                :: a(*)
+      real(8)                :: b(*)
+      integer                :: offset
 
       include 'CSTAB.h'
 
 
-      call get_delta_r(a(1),b(1),offset)
+      call get_delta(a(1),b(1),offset)
       offset=(offset/8)
 
       if (offset>0) then
@@ -202,15 +171,14 @@
 
       subroutine CSTAB_adjust_base_h(a,b,offset)
 
-      complex(8), intent(in) :: a(*)
-      complex(8), intent(in) :: b(*)
-      integer, intent(out)   :: offset
+      complex(8)             :: a(*), b(*)
+      integer                :: offset
       integer                :: L2_LSIZE_h
 
       include 'CSTAB.h'
 
 
-      call get_delta_h(a(1),b(1),offset)
+      call get_delta(a(1),b(1),offset)
       offset=(offset/16)
       L2_LSIZE_h = L2_LSIZE/2
 
@@ -257,7 +225,7 @@
       include 'CSTAB.h'
 
 
-      call get_delta_r(a(1),b(1),offset)
+      call get_delta(a(1),b(1),offset)
       offset=(offset/8)
       if (offset>0) then
         offset = mod(PAGE_LSIZE-mod(+offset,PAGE_LSIZE),PAGE_LSIZE)
@@ -279,7 +247,7 @@
       include 'CSTAB.h'
 
 
-      call get_delta_h(a(1),b(1),offset)
+      call get_delta(a(1),b(1),offset)
       offset=(offset/16)
       PAGE_LSIZE_h = PAGE_LSIZE/2
       if (offset>0) then

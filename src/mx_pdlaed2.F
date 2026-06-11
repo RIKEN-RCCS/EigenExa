@@ -165,12 +165,10 @@
 !     $                   TWO = 2.0D0, EIGHT = 8.0D0 )
 !     ..
 !     .. Local Scalars ..
-      INTEGER            COL, CT, I, IAM, IE1, IE2, IMAX, J, JJQ2,
+      INTEGER            COL, CT, I, IAM, IE1, IE2, IMAX, INFO, J, JJQ2,
      &     JJS, JMAX, JS, K2, MYCOL, MYROW, N1P1, N2, NJ,
      &     NJCOL, NJJ, NP, NPROCS, NPROW, PJ, PJCOL, PJJ
       DOUBLE PRECISION   C, EPS, S, T, TAU, TOL
-      INTEGER(8) :: INFO
-      INTEGER    :: INFO_I4
 !     ..
 !     .. External Functions ..
       INTEGER            IDAMAX, INDXG2L, INDXL2G, NUMROC
@@ -243,10 +241,7 @@
 !     components of Z are zero in this new basis.
 !     
 !     
-      INFO = 0
-      INFO_I4 = INFO
-      CALL DLAPST( 'I', N, D, INDX, INFO_I4 )
-      INFO = INFO_I4
+      CALL DLAPST( 'I', N, D, INDX, INFO )
 !     
 !$OMP PARALLEL PRIVATE(I,J,COL)
 !$OMP DO

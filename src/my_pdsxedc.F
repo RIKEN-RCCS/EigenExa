@@ -28,8 +28,7 @@
      &     DESCQ, WORK, LWORK,IWORK, LIWORK, INFO )
 !     .. Scalar Arguments ..
       CHARACTER          COMPZ
-      INTEGER            IQ, JQ, N, HBW, LDE
-      INTEGER(8)         LIWORK, LWORK, INFO
+      INTEGER            INFO, IQ, JQ, LIWORK, LWORK, N, HBW, LDE
 !     ..
 !     .. Array Arguments ..
       INTEGER            DESCQ( * ), IWORK( * )
@@ -145,11 +144,9 @@
 !     .. Local Scalars ..
       LOGICAL            LQUERY
       INTEGER            ICOFFQ, IIQ, IQCOL, IQROW, IROFFQ, JJQ,
-     &     LDQ, MYCOL, MYROW, NB, NP,
+     &     LDQ, LIWMIN, LWMIN, MYCOL, MYROW, NB, NP,
      &     NPCOL, NPROW, NQ, I, J
       DOUBLE PRECISION   ORGNRM
-      INTEGER(8) :: LWMIN, LIWMIN
-      INTEGER :: INFO_I4
 !     ..
 !     .. External Functions ..
       LOGICAL            LSAME
@@ -167,8 +164,8 @@
 !     .. Executable Statements ..
 !     
 !     This is just to keep ftnchek and toolpack/1 happy
-!>      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!>     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 !     
 !     Test the input parameters.
 !     
@@ -190,16 +187,14 @@
       IF( NPROW.EQ.-1 ) THEN
          INFO = -( 600+CTXT_ )
       ELSE
-         INFO_I4=INFO
-         CALL CHK1MAT( N, 2, N, 2, IQ, JQ, DESCQ, 8, INFO_I4 )
-         INFO = INFO_I4
+         CALL CHK1MAT( N, 2, N, 2, IQ, JQ, DESCQ, 8, INFO )
          IF( INFO.EQ.0 ) THEN
             NB = DESCQ( NB_ )
             IROFFQ = MOD( IQ-1, DESCQ( MB_ ) )
             ICOFFQ = MOD( JQ-1, DESCQ( NB_ ) )
             IQROW = INDXG2P( IQ, NB, MYROW, DESCQ( RSRC_ ), NPROW )
             IQCOL = INDXG2P( JQ, NB, MYCOL, DESCQ( CSRC_ ), NPCOL )
-            LWMIN = 6*N + 2*INT(NP,8)*INT(NQ,8)
+            LWMIN = 6*N + 2*NP*NQ
             LIWMIN = 2 + 7*N + 8*NPCOL
 !     
             WORK( 1 ) = DBLE( LWMIN )
@@ -221,9 +216,7 @@
          END IF
       END IF
       IF( INFO.NE.0 ) THEN
-         INFO_I4 = INFO
-         CALL PXERBLA( DESCQ( CTXT_ ), 'MY_PDSxEDC', -INFO_I4 )
-         INFO=INFO_I4
+         CALL PXERBLA( DESCQ( CTXT_ ), 'MY_PDSxEDC', -INFO )
          RETURN
       ELSE IF( LQUERY ) THEN
          RETURN
@@ -277,16 +270,14 @@
       ORGNRM = DLANST( 'M', N, D, E )
       if ( ieee_is_nan( ORGNRM ) ) ORGNRM = ZERO
       IF( ORGNRM.NE.ZERO ) THEN
-         INFO_I4=INFO
-         CALL DLASCL( 'G', 0, 0, ORGNRM, ONE, N, 1, D, N, INFO_I4 )
+         CALL DLASCL( 'G', 0, 0, ORGNRM, ONE, N, 1, D, N, INFO )
          if ( N-1 >= 1 ) then
             DO 50 I = 1, HBW
                CALL DLASCL( 'G', 0, 0, ORGNRM, ONE, N-I, 1, E(1,I), 
-     &              N-I, INFO_I4 )
+     &              N-I, INFO )
                
  50         CONTINUE
          end if
-         INFO = INFO_I4
       END IF
 !     
       CALL MY_PDLAED0( N, HBW, D, E, LDE, Q, IQ, JQ, DESCQ, WORK, IWORK,
@@ -299,11 +290,8 @@
 !     
 !     Scale back.
 !     
-      IF( ORGNRM.NE.ZERO ) THEN
-         INFO_I4=INFO
-         CALL DLASCL( 'G', 0, 0, ONE, ORGNRM, N, 1, D, N, INFO_I4 )
-         INFO = INFO_I4
-      ENDIF
+      IF( ORGNRM.NE.ZERO )
+     &     CALL DLASCL( 'G', 0, 0, ONE, ORGNRM, N, 1, D, N, INFO )
 !     
  10   CONTINUE
 !     

@@ -50,11 +50,10 @@
 !     .. Local Scalars ..
 !     
       INTEGER            COL, I, IBUF, ICTXT, IIQ, IIZ1, IIZ2, IQCOL,
-     &     IQROW, IZ1COL, IZ1ROW, IZ2COL,
+     &     IQROW, IZ, IZ1, IZ1COL, IZ1ROW, IZ2, IZ2COL,
      &     IZ2ROW, J, JJQ, JJZ1, JJZ2, MYCOL, MYROW, N2,
      &     NB, NBLOC, NPCOL, NPROW, NQ1, NQ2, ZSIZ, 
      &     K
-      INTEGER(8) :: IZ, IZ1, IZ2
       
 !     ..
 !     .. Intrinsic Functions ..
@@ -75,8 +74,8 @@
 !     This is just to keep ftnchek and toolpack/1 happy
       
 
-!      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 !     
       ICTXT = DESCQ( CTXT_ )
       NB = DESCQ( NB_ )
@@ -103,9 +102,8 @@
                NBLOC = ( NQ1-1 ) / NB + 1
 !$OMP DO
                DO J = 1, NBLOC
-                  IZ1 = INT(J-1,8)*INT(NB,8)
-                  IZ = INT(I,8)*INT(NB,8) + 1 +
-     &                 INT(J-1,8)*INT(NB,8)*INT(NPCOL,8)
+                  IZ1 = (J-1)*NB
+                  IZ = I*NB + 1 + (J-1)*NB*NPCOL
                   ZSIZ = MIN( NB, NQ1-IZ1 )
                   IF ( ZSIZ > 0 ) THEN
                      IF ( K .EQ. 1 ) THEN
@@ -136,9 +134,8 @@
                NBLOC = ( NQ2-1 ) / NB + 1
 !$OMP DO
                DO J = 1, NBLOC
-                  IZ2 = INT(J-1,8)*INT(NB,8)
-                  IZ = INT(NB,8)*INT(I,8) + N1 + 1 +
-     &                 INT(J-1,8)*INT(NB,8)*INT(NPCOL,8)
+                  IZ2 = (J-1)*NB
+                  IZ = NB*I + N1 + 1 + (J-1)*NB*NPCOL
                   ZSIZ = MIN( NB, NQ2-IZ2 )
                   IF ( ZSIZ > 0 ) THEN
                      IF ( K .EQ. 1 ) THEN
@@ -171,9 +168,8 @@
                NBLOC = ( NQ1-1 ) / NB + 1
 !$OMP DO
                DO J = 1, NBLOC
-                  IZ1 = INT(J-1,8)*INT(NB,8)
-                  IZ = INT(I,8)*INT(NB,8) + 1 +
-     &                 INT(J-1,8)*INT(NB,8)*INT(NPCOL,8)
+                  IZ1 = (J-1)*NB
+                  IZ = I*NB + 1 + (J-1)*NB*NPCOL
                   ZSIZ = MIN( NB, NQ1-IZ1 )
                   IF ( ZSIZ > 0 ) THEN
                      IF ( K .EQ. 1 ) THEN

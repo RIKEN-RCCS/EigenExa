@@ -20,8 +20,7 @@
       SUBROUTINE MX_PDLAED1( N, N1, D, ID, Q, IQ, JQ, DESCQ, RHO, WORK,
      &     IWORK, INFO )
 !     .. Scalar Arguments ..
-      INTEGER            ID, IQ, JQ, N, N1
-      INTEGER(8) :: INFO
+      INTEGER            ID, INFO, IQ, JQ, N, N1
       DOUBLE PRECISION   RHO
 !     ..
 !     .. Array Arguments ..
@@ -128,14 +127,12 @@
 !     PARAMETER          ( ZERO = 0.0D+0, ONE = 1.0D+0 )
 !     ..
 !     .. Local Scalars ..
-      INTEGER            COL, COLTYP, ICTOT, ICTXT, IDLMDA, IIQ,
+      INTEGER            COL, COLTYP, IBUF, ICTOT, ICTXT, IDLMDA, IIQ,
      &     INDCOL, INDROW, INDX, INDXC, INDXP, INDXR, INQ,
-     &     IPQ2, IPSM, IPWORK, IQ1, IQ2, IQCOL,
+     &     IPQ, IPQ2, IPSM, IPU, IPWORK, IQ1, IQ2, IQCOL,
      &     IQQ, IQROW, IW, IZ, J, JC, JJ2C, JJC, JJQ, JNQ,
      &     K, LDQ, LDQ2, LDU, MYCOL, MYROW, NB, NN, NN1,
      &     NN2, NP, NPCOL, NPROW, NQ
-      INTEGER(8) :: IBUF, IPQ, IPU, IQ2_I8, INQ_I8
-      INTEGER :: INFO_I4
 !     ..
 !     .. Local Arrays ..
       INTEGER            DESCQ2( DLEN_ ), DESCU( DLEN_ )
@@ -158,8 +155,8 @@
 !     .. Executable Statements ..
 !     
 !     This is just to keep ftnchek and toolpack/1 happy
-!      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 !     
 !     
 !     Test the input parameters.
@@ -176,9 +173,7 @@
          INFO = -2
       END IF
       IF( INFO.NE.0 ) THEN
-         INFO_I4 = INFO
-         CALL PXERBLA( DESCQ( CTXT_ ), 'MX_PDLAED1', -INFO_I4 )
-         INFO = INFO_I4
+         CALL PXERBLA( DESCQ( CTXT_ ), 'MX_PDLAED1', -INFO )
          RETURN
       END IF
 !     
@@ -208,8 +203,8 @@
       IDLMDA = IZ + N
       IW = IDLMDA + N
       IPQ2 = IW + N
-      IPU = IPQ2 + INT(LDQ2,8)*INT(NQ,8)
-      IBUF = IPU + INT(LDU,8)*INT(NQ,8)
+      IPU = IPQ2 + LDQ2*NQ
+      IBUF = IPU + LDU*NQ
 !     (IBUF est de taille 3*N au maximum)
 !     
       ICTOT = 1
@@ -222,12 +217,10 @@
       INDROW = COLTYP + N
       INDXR = INDROW + N
 !     
-      INFO_I4 = INFO
       CALL DESCINIT( DESCQ2, N, N, NB, NB, IQROW, IQCOL, ICTXT, LDQ2,
-     &     INFO_I4 )
+     &     INFO )
       CALL DESCINIT( DESCU, N, N, NB, NB, IQROW, IQCOL, ICTXT, LDU,
-     &     INFO_I4 )
-      INFO = INFO_I4
+     &     INFO )
 !     
 !     Form the z-vector which consists of the last row of Q_1 and the
 !     first row of Q_2.
@@ -241,7 +234,7 @@
 !     
 !     Deflate eigenvalues.
 !     
-      IPQ = IIQ + INT( JJQ-1,8 )*INT(LDQ,8)
+      IPQ = IIQ + ( JJQ-1 )*LDQ
       d1 = MPI_WTIME()
       CALL MX_PDLAED2( ICTXT, K, N, N1, NB, D, IQROW, IQCOL,
      &     Q( IPQ ), LDQ,
@@ -305,15 +298,15 @@
          END IF
 !     
 !$OMP PARALLEL DO
-!$OMP+         PRIVATE(J,JC,JJC,JJ2C,COL,IQ2_I8,INQ_I8)
+!$OMP+         PRIVATE(J,JC,JJC,JJ2C,COL,IQ2,INQ)
          DO 10 J = K + 1, N
             JC = IWORK( INDX+J-1 )
             CALL INFOG1L( JQ-1+JC, NB, NPCOL, MYCOL, IQCOL, JJC, COL )
             CALL INFOG1L( JC, NB, NPCOL, MYCOL, IQCOL, JJ2C, COL )
             IF( MYCOL.EQ.COL ) THEN
-               IQ2_I8 = IPQ2 + INT( JJ2C-1,8 )*INT(LDQ2,8)
-               INQ_I8 = IPQ + INT( JJC-1,8 )*INT(LDQ,8)
-               CALL DCOPY( NP, WORK( IQ2_I8 ), 1, Q( INQ_I8 ), 1 )
+               IQ2 = IPQ2 + ( JJ2C-1 )*LDQ2
+               INQ = IPQ + ( JJC-1 )*LDQ
+               CALL DCOPY( NP, WORK( IQ2 ), 1, Q( INQ ), 1 )
             END IF
  10      CONTINUE
 !$OMP END PARALLEL DO

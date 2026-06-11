@@ -87,7 +87,7 @@
       integer, intent(in)    :: lde
       real(8), intent(out)   :: z(1:ldz,*)
       integer, intent(in)    :: ldz
-      integer(8), intent(out)   :: info
+      integer, intent(out)   :: info
       real(8), intent(out)   :: ret
 
 !     Parameters BLACS array descritor(the position of entry tags), etc
@@ -111,10 +111,7 @@
       integer                :: i, j, k, nx, nxv, istat, nb, lddz, lddw
       integer                :: np, nq, npcol, nprow
       integer                :: nprocs, iam, mycol, myrow
-      integer                :: ictxt, ierr
-      integer(8)             :: lwork, liwork
-
-      integer :: info_i4
+      integer                :: ictxt, ierr, lwork, liwork
 
       real(8), allocatable   :: work(:)
       integer, allocatable   :: iwork(:)
@@ -170,12 +167,10 @@
       nx   = (n-1)/npcol+1
       nxv  = (nvec-1)/npcol+1
 
-      call descinit(descz, n, n, nb, nb, 0, 0, ictxt, lddz, INFO_i4)
+      call descinit(descz, n, n, nb, nb, 0, 0, ictxt, lddz, INFO)
 
 !     preparing working arrays
-      lwork  = max(1+6*N+2*INT(np,8)*INT(nq+max(nq,nb),8),
-     &         INT(lddz,8)*INT(lddw,8),
-     &         INT(ldz,8)*INT(nx,8))
+      lwork  = max(1+6*N+2*np*(nq+max(nq,nb)), lddz*lddw, ldz*nx)
       liwork = 2+7*n+8*npcol
       allocate(work(lwork), iwork(liwork), stat=istat)
       if (istat /= 0) then
@@ -269,7 +264,7 @@
 #if TIMER_PRINT>1
           d1 = eigen_get_wtime()
 #endif
-          call descinit(descw, n, n, 1, 1, 0, 0, ictxt, ldz, INFO_I4)
+          call descinit(descw, n, n, 1, 1, 0, 0, ictxt, ldz, INFO)
           call pdgemr2d(n, n, z, 1, 1, descz, work, 1, 1, descw,
      &         ictxt)
 #if TIMER_PRINT>1

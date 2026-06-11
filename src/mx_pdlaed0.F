@@ -19,8 +19,7 @@
       SUBROUTINE MX_PDLAED0( N, D, E, Q, IQ, JQ, DESCQ,
      &     WORK, IWORK, INFO )
 !     .. Scalar Arguments ..
-      INTEGER            IQ, JQ, N
-      INTEGER(8)         INFO
+      INTEGER            INFO, IQ, JQ, N
 !     ..
 !     .. Array Arguments ..
       INTEGER            DESCQ( * ), IWORK( * )
@@ -100,11 +99,9 @@
 !     ..
 !     .. Local Scalars ..
       INTEGER            I, ID, IDCOL, IDROW, IID, IINFO, IIQ, IM1, IM2,
-     &     IQCOL, IQROW, J, JJD, JJQ, LDQ, MATSIZ,
+     &     IPQ, IQCOL, IQROW, J, JJD, JJQ, LDQ, MATSIZ,
      &     MYCOL, MYROW, N1, NB, NBL, NBL1, NPCOL, NPROW,
      &     SUBPBS, TSUBPBS
-      INTEGER(8) :: IPQ
-      INTEGER :: INFO_I4
 !     ..
 !     .. External Subroutines ..
       EXTERNAL           BLACS_GRIDINFO, DGEBR2D, DGEBS2D, DGERV2D,
@@ -119,8 +116,8 @@
 !     .. Executable Statements ..
 !     
 !     This is just to keep ftnchek and toolpack/1 happy
-!      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 !     
 !     Test the input parameters.
 !     
@@ -129,9 +126,7 @@
       IF( DESCQ( NB_ ).GT.N .OR. N.LT.2 )
      &     INFO = -1
       IF( INFO.NE.0 ) THEN
-         INFO_I4 = INFO
-         CALL PXERBLA( DESCQ( CTXT_ ), 'MX_PDLAED0', -INFO_I4 )
-         INFO = INFO_I4
+         CALL PXERBLA( DESCQ( CTXT_ ), 'MX_PDLAED0', -INFO )
          RETURN
       END IF
 !     
@@ -177,15 +172,11 @@
      &        MYCOL, IID, JJD, IDROW, IDCOL )
          MATSIZ = MIN( NB, N-ID+1 )
          IF( MYROW.EQ.IDROW .AND. MYCOL.EQ.IDCOL ) THEN
-            IPQ = IID + INT( JJD-1,8 )*INT(LDQ,8)
-            INFO_I4 = INFO
+            IPQ = IID + ( JJD-1 )*LDQ
             CALL DSTEQR( 'I', MATSIZ, D( ID ), E( ID ), Q( IPQ ), LDQ,
-     &           WORK, INFO_I4 )
-            INFO = INFO_I4
+     &           WORK, INFO )
             IF( INFO.NE.0 ) THEN
-               INFO_I4 = INFO
-               CALL PXERBLA( DESCQ( CTXT_ ), 'DSTEQR', -INFO_I4 )
-               INFO = INFO_I4
+               CALL PXERBLA( DESCQ( CTXT_ ), 'DSTEQR', -INFO )
                RETURN
             END IF
          ELSE
@@ -228,9 +219,9 @@
 !     into an eigensystem of size MATSIZ.
 !     
             CALL MX_PDLAED1( MATSIZ, N1, D( ID ), ID, Q, IQ, JQ, DESCQ,
-     &           E( ID+N1-1 ), WORK, IWORK( SUBPBS+1 ), INFO )
-            IF( INFO.NE.0 ) THEN
-               INFO = INT(INFO,8)*INT( N+1,8 ) + ID
+     &           E( ID+N1-1 ), WORK, IWORK( SUBPBS+1 ), IINFO )
+            IF( IINFO.NE.0 ) THEN
+               INFO = IINFO*( N+1 ) + ID
             END IF
 !     
  70         CONTINUE

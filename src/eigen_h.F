@@ -58,7 +58,7 @@
          real(8)                :: SIGMA
          integer                :: nm, ny, nb
          integer                :: my_rank, world_size, ierr
-         integer(8)             :: INFO
+         integer                :: INFO
          logical                :: flag
 *-
          real(8), pointer       :: z_r(:,:)

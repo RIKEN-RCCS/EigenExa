@@ -19,6 +19,7 @@
       CONTAINS
 
       SUBROUTINE MY_PDLAED0(N, HBW, D, E, LDE, Q, IQ, JQ,
+!     $                 DESCQ, WORK, IWORK, LDQ, CQ, INFO)
      &     DESCQ, WORK, IWORK, CP, CQ, INFO)
 !     
       
@@ -27,9 +28,9 @@
 !     Modification is done by T.Imamura
 !     
 !     .. Scalar Arguments ..
-      INTEGER            IQ, JQ, N, CP, CQ, HBW, LDE
+!     INTEGER            INFO, IQ, JQ, N, LDQ, CQ, HBW, LDE
+      INTEGER            INFO, IQ, JQ, N, CP, CQ, HBW, LDE
       INTEGER :: LDQ
-      INTEGER(8) :: INFO
 !     ..
 !     .. Array Arguments ..
       INTEGER            DESCQ( * ), IWORK( * )
@@ -117,13 +118,11 @@
 
 !     ..
 !     .. Local Scalars ..
-      INTEGER            I, ID, IDCOL, IDROW, IID, IIQ, IM1, IM2,
-     &     IQCOL, IQROW, J, K, JJD, JJQ, MATSIZ,
+      INTEGER            I, ID, IDCOL, IDROW, IID, IINFO, IIQ, IM1, IM2,
+     &     IPQ, IQCOL, IQROW, J, K, JJD, JJQ, MATSIZ,
      &     MYCOL, MYROW, N1, NB, NBL, NBL1, NPCOL, NPROW,
      &     SUBPBS, TSUBPBS, ISTAGE
       integer :: ierr
-      INTEGER(8) :: IPQ
-      INTEGER :: INFO_I4
 
       DOUBLE PRECISION   RHO
 !     .. Local Arrays ..
@@ -150,8 +149,8 @@
 !     .. Executable Statements ..
 !     
 !     This is just to keep ftnchek and toolpack/1 happy
-!      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 
 
 !     
@@ -165,9 +164,7 @@
      &     INFO = -1
       
       IF( INFO.NE.0 ) THEN
-         INFO_I4 = INFO
-         CALL PXERBLA( DESCQ( CTXT_ ), 'MY_PDLAED0', -INFO_I4 )
-         INFO = INFO_I4
+         CALL PXERBLA( DESCQ( CTXT_ ), 'MY_PDLAED0', -INFO )
          RETURN
       END IF
 
@@ -222,10 +219,8 @@
          END DO
 
 !     SVD : C = U*S*VT
-         INFO_I4 = INFO
          CALL DGESVD('A', 'A', HBW, HBW, C, HBW, S, U, HBW,  
-     &        VT, HBW, WORK, 7*HBW, INFO_I4) ! WORK size should be much la
-         INFO = INFO_I4
+     &        VT, HBW, WORK, 7*HBW, IINFO) ! WORK size should be much la
 !     rger than 7HBW
 
          DO  J = 1, HBW
@@ -276,7 +271,7 @@
      &        MYCOL, IID, JJD, IDROW, IDCOL )
          MATSIZ = MIN( NB, N-ID+1 )
          IF( MYROW.EQ.IDROW .AND. MYCOL.EQ.IDCOL ) THEN
-            IPQ = IID + INT( JJD-1,8 )*INT(LDQ,8)
+            IPQ = IID + ( JJD-1 )*LDQ
             
             CALL LAPACK_EIGEN2(N, MATSIZ, HBW, ID, D( ID ), 
      &           E( ID, 1 ), LDE, Q( IPQ ), LDQ)
@@ -333,7 +328,7 @@
             END IF
 
 !     CALL DESCINIT( DESCZ, MATSIZ, 1, MATSIZ, 1, 0, 0,
-!     $                        DESCQ(CTXT_),  MATSIZ, INFO_I4)    
+!     $                        DESCQ(CTXT_),  MATSIZ, IINFO)    
 
 !     
 !     Merge lower order eigensystems (of size N1 and MATSIZ - N1)
@@ -349,10 +344,8 @@
                END DO
             END DO
 
-            INFO_I4 = INFO
             CALL DGESVD('A', 'A', HBW, HBW, C, HBW, S, U, HBW, VT,  
-     &           HBW, WORK, 7*HBW, INFO_I4)
-            INFO = INFO_I4
+     &           HBW, WORK, 7*HBW, IINFO)
 
             DO J = 1, HBW
                S(J)  = SQRT(S(J))
@@ -390,12 +383,12 @@
 
                CALL MY_PDLAED1( MATSIZ, N1, D( ID ), ID, Q, IQ, JQ,  
      &              DESCQ, RHO, WORK, IWORK( SUBPBS+1 ), W, ISTAGE,
-     &              INFO )
+     &              IINFO )
 
             END DO
             
-            IF( INFO.NE.0 ) THEN
-               INFO = INFO*( N+1 ) + ID
+            IF( IINFO.NE.0 ) THEN
+               INFO = IINFO*( N+1 ) + ID
             END IF
 
  70         CONTINUE

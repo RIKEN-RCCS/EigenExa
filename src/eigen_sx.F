@@ -66,7 +66,7 @@
       real(8)                :: SIGMA
       integer                :: nm, ny, nb, nme
       integer                :: my_rank, world_size, ierr
-      integer(8)             :: INFO
+      integer                :: INFO
       integer                :: i
       logical                :: flag
 

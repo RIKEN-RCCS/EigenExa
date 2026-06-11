@@ -2,7 +2,9 @@
 #
 #  File     : Makefile.am
 #
-# Copyright(C) 2012-2024 RIKEN.
+# Copyright(C) 2012-2025 RIKEN.
+# Copyright(C) 2023-2024 Mikihiro Hayashi
+#                        University of Fukui.
 # Copyright(C) 2011-2012 Toshiyuki Imamura
 #                        Graduate School of Informatics and Engineering,
 #                        The University of Electro-Communications.
@@ -32,4 +34,4 @@
 #
 #--------*---------*---------*---------*---------*---------*---------*-*
 
-SUBDIRS = src C benchmark benchmark_h
+SUBDIRS = src benchmark benchmark_h

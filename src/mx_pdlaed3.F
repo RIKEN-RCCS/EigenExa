@@ -25,8 +25,7 @@
 !     Modification is done by T.Imamura
 !     
 !     .. Scalar Arguments ..
-      INTEGER            DCOL, DROW, ICTXT, K, LDU, N, NB, NPCOL_
-      INTEGER(8)         INFO
+      INTEGER            DCOL, DROW, ICTXT, INFO, K, LDU, N, NB, NPCOL_
       DOUBLE PRECISION   RHO
 !     ..
 !     .. Array Arguments ..
@@ -158,12 +157,11 @@
 !     PARAMETER          ( ONE = 1.0D+0 )
 !     ..
 !     .. Local Scalars ..
-      INTEGER            COL, GI, I, IIU, IU, J, JJU, JU,
+      INTEGER            COL, GI, I, IINFO, IIU, IPD, IU, J, JJU, JU,
      &     KK, KL, KLC, KLR, MYCOL, MYKL, MYKLR, MYROW,
      &     NPCOL, NPROW, PDC, PDR, ROW
       DOUBLE PRECISION   AUX, TEMP
-      INTEGER :: INFO_I4
-      INTEGER(8) :: SINFO, IPD, IPD0
+      INTEGER :: SINFO, IPD0
 !     ..
 !     .. Shared Scalar ..
 !$    INTEGER, SAVE :: KLR_SHARED
@@ -273,10 +271,9 @@
 !$OMP DO SCHEDULE(STATIC,1)
          DO I = 1, MYKLR
             KK = PDR + I - 1
-            INFO_I4 = 0
-            CALL DLAED4( K, KK, DLAMDA, W, SBUF, RHO, AUX, INFO_I4 )
+            CALL DLAED4( K, KK, DLAMDA, W, SBUF, RHO, AUX, IINFO )
             BUF(K+I) = AUX
-            IF( INFO_I4.NE.0 ) THEN
+            IF( IINFO.NE.0 ) THEN
                SINFO = KK
             END IF
 !     
@@ -376,7 +373,7 @@
          IPD = (2*K+1)
       else
          IPD = (2*K+1) + MOD( MYKL, NPROW )
-     &        + INT(MOD( MYROW-DROW+NPROW, NPROW ),8) * INT(KLR,8)
+     &        + MOD( MYROW-DROW+NPROW, NPROW ) * KLR
       end if
 
       IF ( MYKLR > 0 ) THEN
@@ -481,8 +478,7 @@
             KK = INDXC( J )
             JU = INDX( KK )
             JJU = INDXG2L( JU, NB, J, J, NPCOL )
-            INFO_I4 = 0
-            CALL DLAED4( K, KK, DLAMDA, W, SBUF, RHO, AUX, INFO_I4 )
+            CALL DLAED4( K, KK, DLAMDA, W, SBUF, RHO, AUX, IINFO )
             IF( K == 1 .OR. K == 2 ) THEN
                DO I = 1, KLR
                   KK = INDXR( I )

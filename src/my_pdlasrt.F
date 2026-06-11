@@ -25,8 +25,7 @@
 !     
 !     .. Scalar Arguments ..
       CHARACTER          ID
-      INTEGER            IQ, JQ, N
-      INTEGER(8) :: INFO, LIWORK, LWORK
+      INTEGER            INFO, IQ, JQ, LIWORK, LWORK, N
 !     ..
 !     .. Array Arguments ..
       INTEGER            DESCQ( * ), IWORK( * )
@@ -103,13 +102,11 @@
 !     ..
 !     .. Local Scalars ..
       INTEGER            CL, COL, DUMMY, I, ICTXT, IID, IIQ, INDCOL,
-     &     INDX, INDXC, INDXG, IPQ2, J,
-     &     JJQ, K, L, LDQ, LEND, LIWMIN, MYCOL,
+     &     INDX, INDXC, INDXG, IPQ, IPQ2, IPW, IPWORK, J,
+     &     JJQ, K, L, LDQ, LEND, LIWMIN, LWMIN, MYCOL,
      &     MYROW, NB, ND, NP, NPCOL, NPROW, NQ, PSQ, QCOL,
      &     QTOT, SBUF
       INTEGER :: II, IWK_PSQ_MYCOL
-      INTEGER :: INFO_I4
-      INTEGER(8) :: IPQ, IPW, IPWORK, LWMIN
 !     ..
 !     .. External Functions ..
       LOGICAL            LSAME
@@ -129,8 +126,8 @@
 !     .. Executable Statements ..
 !     
 !     This is just to keep ftnchek and toolpack/1 happy
-!      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
-!     &     RSRC_.LT.0 )RETURN
+      IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
+     &     RSRC_.LT.0 )RETURN
 !     
       IF( N.EQ.0 )
      &     RETURN
@@ -143,15 +140,13 @@
       IF( NPROW.EQ.-1 ) THEN
          INFO = -( 600+CTXT_ )
       ELSE
-         INFO_I4=INFO
-         CALL CHK1MAT( N, 1, N, 1, IQ, JQ, DESCQ, 6, INFO_I4 )
-         INFO=INFO_I4
+         CALL CHK1MAT( N, 1, N, 1, IQ, JQ, DESCQ, 6, INFO )
          IF( INFO.EQ.0 ) THEN
             NB = DESCQ( NB_ )
             LDQ = DESCQ( LLD_ )
             NP = NUMROC( N, NB, MYROW, DESCQ( RSRC_ ), NPROW )
             NQ = NUMROC( N, NB, MYCOL, DESCQ( CSRC_ ), NPCOL )
-            LWMIN = MAX( N, INT(NP,8)*INT( NB+NQ,8 ) )
+            LWMIN = MAX( N, NP*( NB+NQ ) )
             LIWMIN = N + 2*( NB+NPCOL )
             IF( .NOT.LSAME( ID, 'I' ) ) THEN
                INFO = -1
@@ -166,9 +161,7 @@
       END IF
 !     
       IF( INFO.NE.0 ) THEN
-         INFO_I4 = INFO
-         CALL PXERBLA( ICTXT, 'MY_PDLASRT', -INFO_I4 )
-         INFO=INFO_I4
+         CALL PXERBLA( ICTXT, 'MY_PDLASRT', -INFO )
          RETURN
       END IF
 !     
@@ -183,7 +176,7 @@
 !     
       IID = 1
       IPQ2 = 1
-      IPW = IPQ2 + INT(NP,8)*INT(NQ,8)
+      IPW = IPQ2 + NP*NQ
 !     
       DUMMY = 0
       IIQ = INDXG2L( IQ, NB, DUMMY, DUMMY, NPROW )
@@ -196,9 +189,7 @@
 !     
 !     Sort the eigenvalues in D
 !     
-      INFO_I4=INFO
-      CALL DLAPST( 'I', N, D, IWORK( INDX ), INFO_I4 )
-      INFO = INFO_I4
+      CALL DLAPST( 'I', N, D, IWORK( INDX ), INFO )
 !     
 !$OMP PARALLEL DO
 !$OMP+         PRIVATE(L)
@@ -259,8 +250,8 @@
                CL = IWORK( INDCOL+L )
                I = JQ + ND + L
                JJQ = INDXG2L( I, NB, DUMMY, DUMMY, NPCOL )
-               IPQ = IIQ + INT( JJQ-1,8 )*INT(LDQ,8)
-               IPWORK = IPW + INT( IWK_(L+1)-1,8 )*INT(NP,8)
+               IPQ = IIQ + ( JJQ-1 )*LDQ
+               IPWORK = IPW + ( IWK_(L+1)-1 )*NP
                CALL DCOPY( NP, Q( IPQ ), 1, WORK( IPWORK ), 1 )
             END DO
 !$OMP END PARALLEL DO
@@ -276,8 +267,8 @@
             DO L = 0, K - 1
                I = IWORK( INDXG+L )
                JJQ = INDXG2L( I, NB, DUMMY, DUMMY, NPCOL )
-               IPQ = IPQ2 + INT( JJQ-1,8 )*INT(NP,8)
-               IPWORK = IPW + INT( IWK_PSQ_MYCOL+L-1,8 )*INT(NP,8)
+               IPQ = IPQ2 + ( JJQ-1 )*NP
+               IPWORK = IPW + ( IWK_PSQ_MYCOL+L-1 )*NP
                CALL DCOPY( NP, WORK( IPWORK ), 1, WORK( IPQ ), 1 )
             END DO
 !$OMP END PARALLEL DO
@@ -289,7 +280,7 @@
                SBUF = IWORK( QTOT+COL )
                IF( SBUF.NE.0 ) THEN
                   II = II + 1
-                  IPWORK = IPW + INT( IWORK( PSQ+COL )-1,8 )*INT(NP,8)
+                  IPWORK = IPW + ( IWORK( PSQ+COL )-1 )*NP
                   call isend_dbl( WORK( IPWORK ), NP*SBUF,
      &                 COL+1, RREQ(II), y_COMM_WORLD )
                END IF
@@ -306,8 +297,8 @@
                DO 110 L = 0, K - 1
                   I = JQ - 1 + IWORK( INDXG+L )
                   JJQ = INDXG2L( I, NB, DUMMY, DUMMY, NPCOL )
-                  IPQ = 1 + INT( JJQ-1,8 )*INT(NP,8)
-                  IPWORK = IPW + INT(L,8)*INT(NP,8)
+                  IPQ = 1 + ( JJQ-1 )*NP
+                  IPWORK = IPW + L*NP
                   CALL DCOPY( NP, WORK( IPWORK ), 1, WORK( IPQ ), 1 )
  110           CONTINUE
 !$OMP END PARALLEL DO

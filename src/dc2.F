@@ -83,7 +83,7 @@
       real(8), intent(inout) :: e(1:n)
       real(8), intent(out)   :: z(1:ldz,*)
       integer, intent(in)    :: ldz
-      integer(8), intent(out)   :: info
+      integer, intent(out)   :: info
       real(8), intent(out)   :: ret
 
 !     Parameters BLACS array descritor(the position of entry tags), etc
@@ -107,8 +107,7 @@
       integer                :: i, j, k, nx, nxv, istat, nb, lddz, lddw
       integer                :: np, nq, npcol, nprow
       integer                :: nprocs, iam, mycol, myrow
-      integer                :: ictxt, ierr
-      integer(8)             :: lwork, liwork
+      integer                :: ictxt, ierr, lwork, liwork
       
       real(8), allocatable   :: work(:)
       integer, allocatable   :: iwork(:)
@@ -183,8 +182,7 @@
       
 !     d1 = eigen_get_wtime()
 !     preparing working arrays
-      lwork  = max(1+6*n+2*INT(np,8)*INT(nq+max(nq,nb),8),
-     &         INT(lddz,8)*INT(lddw,8), INT(ldz,8)*INT(nx,8))
+      lwork  = max(1+6*n+2*np*(nq+max(nq,nb)), lddz*lddw, ldz*nx)
       liwork = 2+7*n+8*npcol
       allocate(work(lwork), iwork(liwork), stat=istat)
       if (istat /= 0) then

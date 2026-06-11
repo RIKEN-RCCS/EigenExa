@@ -75,6 +75,7 @@
 
       subroutine  eigen_hrd_final(a, nm, n, d_out, e_out, u_t)
 !$    use omp_lib
+      use, intrinsic :: iso_c_binding
       use eigen_devel_mod
       use eigen_libs_mod
       use eigen_house_h_mod

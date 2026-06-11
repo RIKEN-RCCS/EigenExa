@@ -18,6 +18,8 @@
       integer :: i,j
 
       real(8) :: w_err_max, z_err_max
+      real(8) :: w_err_max_rel, z_err_max_rel
+      real(8) :: w_err_max_element
       real(8) :: d1, d2, d3, d4
 
 
@@ -65,7 +67,7 @@
       call MPI_BARRIER( MPI_COMM_WORLD, ierr )
       d1 = MPI_WTIME( )
 *
-      call eigen_s( n, n, a, nm, w, z, nm,
+      call eigen_FS( n, n, a, nm, w, z, nm,
      &     m_forward=48, m_backward=128 )
 *
       call MPI_BARRIER( MPI_COMM_WORLD, ierr )
@@ -73,7 +75,7 @@
 *
       if ( i_inod == 0 ) then
          print*,"Matrix dimension = ",n
-         print*,"Elapsed time for eigen_S = ",d2-d1," [sec]"
+         print*,"Elapsed time for eigen_FS_C= ",d2-d1," [sec]"
       end if
 *-
       ! reproducible test
@@ -90,7 +92,7 @@
       call mat_set( n, a_, nm )
       call MPI_BARRIER( MPI_COMM_WORLD, ierr )
       d3 = MPI_WTIME( )
-      call eigen_s( n, n, a_, nm, w_, z_, nm,
+      call eigen_FS( n, n, a_, nm, w_, z_, nm,
      &     m_forward=48, m_backward=128 )
       call MPI_BARRIER( MPI_COMM_WORLD, ierr )
       d4 = MPI_WTIME( )
@@ -100,9 +102,11 @@
 *-
       if ( i_inod == 0 ) then
          w_err_max = 0d0
+         w_err_max_rel = 0d0
 !$OMP PARALLEL DO PRIVATE(i) REDUCTION(max:w_err_max)
          do i=1,n
             w_err_max = max( w_err_max, ABS(w(i)-w_(i)) )
+            w_err_max_rel = max(w_err_max_rel, ABS(w(i)))
          end do
 !$OMP END PARALLEL DO
          print*," Repro test : max(w-w_)=",w_err_max
@@ -286,6 +290,9 @@
 
       if ( inod == 1 ) then
          w_err_max = 0d0
+         do i = 1, n, 100
+            print *, w(i), w_(i)
+         enddo
 !$OMP PARALLEL DO PRIVATE(i) REDUCTION(max:w_err_max)
          do i=1,n
             w_err_max = max(w_err_max,dabs(w(i) - w_(i)))

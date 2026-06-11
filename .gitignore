@@ -1,0 +1,8 @@
+*.o
+*.lo
+*.mod
+*/*.o
+*/*.lo
+*/*.mod
+*/lib*.a
+*/lib*.so

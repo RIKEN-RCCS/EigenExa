@@ -348,7 +348,6 @@
 
       subroutine eigen_trd_body(a, nm, d_out, e_out, n, nv, m_orig,
      &     u_x, u_y, v_x, v_y, u_t, v_t, u_nn, v_nn, w_nn)
-      use FS_libs_mod,only : FS_MYRANK
       implicit none
       include 'CSTAB.h'
 

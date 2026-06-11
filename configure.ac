@@ -2,7 +2,9 @@
 #
 #  File     : configure.ac
 #
-# Copyright(C) 2012-2024 RIKEN.
+# Copyright(C) 2012-2025 RIKEN.
+# Copyright(C) 2023-2024 Mikihiro Hayashi
+#                        University of Fukui.
 # Copyright(C) 2011-2012 Toshiyuki Imamura
 #                        Graduate School of Informatics and Engineering,
 #                        The University of Electro-Communications.
@@ -32,10 +34,10 @@
 #
 #--------*---------*---------*---------*---------*---------*---------*-*
 
-AC_PREREQ(2.59)
-AC_INIT(EigenExa, [2.13], EigenExa@ml.riken.jp, EigenExa, https://https://github.com/RIKEN-RCCS/EigenExa)
+AC_PREREQ([2.69])
+AC_INIT([EigenExa],[2.12_C++_rev1],[EigenExa@ml.riken.jp],[EigenExa],[https://www.r-ccs.riken.jp/labs/lpnctrt/projects/eigenexa/])
 AC_CONFIG_SRCDIR([src/eigen_libs.F])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([foreign])
 
@@ -49,15 +51,6 @@ AC_PROG_MAKE_SET
 ## ranlib
 AC_PROG_RANLIB
 
-## check MacOS
-if test `uname` = Darwin; then 
-   OS_MACOS=yes
-   SUFFIX_DYLIB=dylib
-else
-   SUFFIX_DYLIB=so
-fi
-AC_SUBST(SUFFIX_DYLIB)
-AC_SUBST(OS_MACOS)
 
 ## shared lib
 AC_ARG_ENABLE([shared-library],
@@ -131,19 +124,21 @@ AC_ARG_ENABLE([mpi],
       [MPI library.])],
     [
       if test x"${enableval}" = x"intel"; then
-        if test ${CC_ACT} != icc; then
-	    CC=mpiicc
-	fi
-        if test ${CC_ACT} != icx; then
+	    #CC=mpiicc
 	    CC=mpiicx
-	fi
-	    F77=mpiifort
-	    FC=mpiifort
+        #CXX=mpiicpc
+        CXX=mpiicpx
+	    #F77=mpiifort
+	    F77=mpiifx
+	    #FC=mpiifort
+	    FC=mpiifx
 	    echo 'Intel MPI and MKL are forced to use'
+	    LAPACK_INCS=
 	    LAPACK_LIBS=
 	    LAPACK_PATH=
       else
 	    CC=mpicc
+        CXX=mpicxx
 	    F77=mpif90
 	    FC=mpif90
       fi
@@ -254,7 +249,8 @@ AC_SUBST(DEBUG)
 ## fortran compiler
 #
 
-eigenexa_default_fc="mpifrtpx mpiifort mpixlf90_r sxmpif90 mpif90"
+#eigenexa_default_fc="mpifrtpx mpiifort mpixlf90_r sxmpif90 mpif90"
+eigenexa_default_fc="mpifrtpx mpiifx mpixlf90_r sxmpif90 mpif90"
 
 # check usablility
 AC_PROG_F77($eigenexa_default_fc)
@@ -271,13 +267,15 @@ if test x"${F77}" != x -a x"${FC}" != x; then
 fi
 
 # check actual compiler
-AC_MSG_CHECKING([for actual compiler])
+AC_MSG_CHECKING([for actual FC compiler])
 
 fc_ver_info=$(${F77} -E --version)
 for vtok in ${fc_ver_info} ; do
 
-  if test x"${vtok}" = x"ifort"; then
-    FC_ACT="ifort"
+  #if test x"${vtok}" = x"ifort"; then
+  if test x"${vtok}" = x"ifx"; then
+    #FC_ACT="ifort"
+    FC_ACT="ifx"
     break
 
   elif test x"${vtok}" = x"GNU"; then
@@ -292,7 +290,8 @@ if test -z "${FC_ACT}"; then
   FC_ACT=${F77}
 fi
 
-if test x"${FC_ACT}" = x"ifort"; then
+#if test x"${FC_ACT}" = x"ifort"; then
+if test x"${FC_ACT}" = x"ifx"; then
   fc_ver_info=$(${F77} -E --version)
   ICC_VERSION=$(echo ${fc_ver_info} | awk '{ print $3}')
   ICC_MAJOR_VERSION=${ICC_VERSION%%.*}
@@ -312,29 +311,28 @@ fi
 
 
 ## C compiler
-#
+#             :: CAUTION, we must need C++ compiler.
+#                IT will be REPLACED by CXX like CC=mpic++ CC=mpiicpx
 
-eigenexa_default_cc="mpifccpx mpiicx mpiicc mpixlc_r sxmpic++ mpicc"
+#eigenexa_default_cc="mpiicpc mpicxx mpiFCCpx" 
+eigenexa_default_cc="mpiicpx mpicxx mpiFCCpx" 
 
 # check usablility
 AC_PROG_CC($eigenexa_default_cc)
 
 # check actual compiler
-AC_MSG_CHECKING([for actual compiler])
 
 cc_ver_info=$(${CC} -E --version)
 for vtok in ${cc_ver_info} ; do
 
+#  if test x"${vtok}" = x"icpc"; then
   if test x"${vtok}" = x"oneAPI"; then
-    CC_ACT="icx"
-    break
-
-  elif test x"${vtok}" = x"icc"; then
-    CC_ACT="icc"
+    #CC_ACT="icc"
+    CC_ACT="icpx"
     break
 
   elif test x"${vtok}" = x"GNU"; then
-    CC_ACT="gcc"
+    CC_ACT="g++"
     break
 
   fi
@@ -345,28 +343,88 @@ if test -z "${CC_ACT}"; then
   CC_ACT=${CC}
 fi
 
-if test ${CC_ACT} = icc -o ${CC_ACT} = icx; then
-if test ${FC_ACT} != ifort; then
-      AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
+#if test ${CC_ACT} = icpc -a ${FC_ACT} != ifort; then
+if test ${CC_ACT} = icpx -a ${FC_ACT} != ifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 1])
 fi
+#if test ${CC_ACT} != icpc -a ${FC_ACT} = ifort; then
+if test ${CC_ACT} != icpx -a ${FC_ACT} = ifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 2])
 fi
-if test ${CC_ACT} != icc -a ${CC_ACT} != icx -a ${FC_ACT} = ifort; then
-      AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
+#if test ${CC} = mpiicpc -a ${F77} != mpiifort; then
+if test ${CC} = mpiicpx -a ${F77} != mpiifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 3])
 fi
-if test ${CC} = mpiicc -o ${CC} = mpiicx; then
-if test ${F77} != mpiifort; then
-      AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
-fi
-fi
-if test ${CC} != mpiicc -a ${CC} != mpiicx -a ${F77} = mpiifort; then
-      AC_MSG_ERROR([C and Fortran compilers must be the same seriese])
+#if test ${CC} != mpiicpc -a ${F77} = mpiifort; then
+if test ${CC} != mpiicpx -a ${F77} = mpiifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 4])
 fi
 
+#AC_MSG_RESULT([$CC_ACT])
+
+
+## C++ compiler
+#
+
+#eigenexa_default_cxx="mpiicpc mpicxx mpiFCCpx" 
+eigenexa_default_cxx="mpiicpx mpicxx mpiFCCpx" 
+
+# check usablility
+AC_PROG_CXX($eigenexa_default_cxx)
+
+# check actual compiler
+AC_MSG_CHECKING([for actual CXX compiler])
+
+cxx_ver_info=$(${CXX} -E --version)
+for vtok in ${cxx_ver_info} ; do
+
+#  if test x"${vtok}" = x"icpc"; then
+  if test x"${vtok}" = x"oneAPI"; then
+    #CXX_ACT="icpc"
+    CXX_ACT="icpx"
+    break
+
+  elif test x"${vtok}" = x"GNU"; then
+    CXX_ACT="g++"
+    break
+
+  fi
+
+done
+
+if test -z "${CXX_ACT}"; then
+  CXX_ACT=${CXX}
+fi
+
+#if test ${CXX_ACT} = icpc -a ${FC_ACT} != ifort; then
+if test ${CXX_ACT} = icpx -a ${FC_ACT} != ifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 5])
+fi
+#if test ${CXX_ACT} != icpc -a ${FC_ACT} = ifort; then
+if test ${CXX_ACT} != icpx -a ${FC_ACT} = ifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 6])
+fi
+#if test ${CXX_ACT} = mpiicpc -a ${F77} != mpiifort; then
+if test ${CXX_ACT} = mpiicpx -a ${F77} != mpiifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 7])
+fi
+#if test ${CXX} != mpiicpc -a ${F77} = mpiifort; then
+if test ${CXX} != mpiicpx -a ${F77} = mpiifx; then
+      AC_MSG_ERROR([C and Fortran compilers must be the same seriese, 8])
+fi
+
+AC_MSG_RESULT([$CXX_ACT])
+
+CC_ACT=${CXX_ACT}
+AC_MSG_CHECKING([for replacement of CC compiler by CXX compiler])
 AC_MSG_RESULT([$CC_ACT])
 
 
 ## lapack
 #
+
+AC_ARG_VAR([LAPACK_INC_DIR], 
+    [LAPACK include dir (compiler options, e.g. -I<lapack header dir>)])
 
 AC_ARG_VAR([LAPACK_PATH], 
     [LAPACK library path (linker flags, e.g. -L<lapack dir>)])
@@ -374,6 +432,17 @@ AC_ARG_VAR([LAPACK_PATH],
 AC_ARG_VAR([LAPACK_LIBS], 
     [LAPACK library files (libraries, e.g. -l<lapack library>)])
 
+
+#
+if test -n "${LAPACK_INC_DIR}"; then
+  for inc in ${LAPACK_INC_DIR}
+  do
+    case ${inc} in
+    -I*) OPT_INC_LAPACK+="${inc} " ;;
+    *) OPT_INC_LAPACK+="-I${inc} " ;;
+    esac
+  done
+fi
 
 #
 if test -n "${LAPACK_PATH}"; then
@@ -391,7 +460,8 @@ if test x"${with_mkl_scalapack}" != x; then
   if test x"${with_mkl}" = x; then
       AC_MSG_ERROR([MKL Scalapack needs Intel MKL])
   fi
-  if test x"${F77}" != x"mpiifort"; then
+  #if test x"${F77}" != x"mpiifort"; then
+  if test x"${F77}" != x"mpiifx"; then
       AC_MSG_ERROR([MKL Scalapack should be linked with Intel MPI/Intel compiler])
   fi
 fi
@@ -400,44 +470,33 @@ USE_MKL=0
 if test -n "${LAPACK_LIBS}"; then
   OPT_LD_LAPACK+=" ${LAPACK_LIBS} "
 
- if test x"${FC_ACT}" = x"ifort" -o x"${FC_ACT}" = x"gfortran"; then
+ #if test x"${FC_ACT}" = x"ifort" -o x"${FC_ACT}" = x"gfortran"; then
+ if test x"${FC_ACT}" = x"ifx" -o x"${FC_ACT}" = x"gfortran"; then
   if test x"${with_mkl}" != x -o x"${with_mkl_scalapack}" != x; then
-    if test x"${FC_ACT}" = x"ifort"; then
-      OPT_LD_LAPACK+=" "
+    #if test x"${FC_ACT}" = x"ifort"; then
+    if test x"${FC_ACT}" = x"ifx"; then
+      OPT_LD_LAPACK+=" -traceback "
     fi
-    if test x"${OS_MACOS}" = x"yes"; then
-      OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib "
-    else
-      OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
-    fi
+    OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
   fi
-  if test x${F77} = xmpiifort -a  x"${with_mkl_scalapack}" != x; then
+  #if test x${F77} = xmpiifort -a  x"${with_mkl_scalapack}" != x; then
+  if test x${F77} = xmpiifx -a  x"${with_mkl_scalapack}" != x; then
     OPT_LD_LAPACK+=" -lmkl_scalapack_lp64 "
   fi
   if test x"${with_mkl}" != x -o x"${with_mkl_scalapack}" != x; then
-    if test x"${OS_MACOS}" = x"yes"; then
-      OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_mpich_lp64 -liomp5 -lpthread -lm -ldl "
-    else
-      OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
-    fi
+    OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
     USE_MKL=1
   fi
  fi
 
-elif test x"${FC_ACT}" = x"ifort"; then
-  if test x"${OS_MACOS}" = x"yes"; then
-    OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib "
-  else
-    OPT_LD_LAPACK+=" -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
-  fi
-  if test x${F77} = xmpiifort -o  x"${with_mkl_scalapack}" = x; then
+#elif test x"${FC_ACT}" = x"ifort"; then
+elif test x"${FC_ACT}" = x"ifx"; then
+  OPT_LD_LAPACK+=" -traceback -I${MKLROOT}/include -L${MKLROOT}/lib/intel64 "
+  #if test x${F77} = xmpiifort -o  x"${with_mkl_scalapack}" = x; then
+  if test x${F77} = xmpiifx -o  x"${with_mkl_scalapack}" = x; then
     OPT_LD_LAPACK+=" -lmkl_scalapack_lp64 "
   fi
-  if test x"${OS_MACOS}" = x"yes"; then
-    OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_mpich_lp64 -liomp5 -lpthread -lm -ldl "
-  else
-    OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
-  fi
+  OPT_LD_LAPACK+=" -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl "
   USE_MKL=1
 
 elif test x"${FC_ACT}" = x"gfortran"; then
@@ -466,11 +525,13 @@ elif test x"${FC_ACT}" = x"sxmpif90"; then
 fi
 
 AC_SUBST(USE_MKL)
+AC_SUBST(OPT_INC_LAPACK)
 AC_SUBST(OPT_LD_LAPACK)
 
 
 ## For intel compiler architecture-oriented options
-if test x"${FC_ACT}" = x"ifort"; then
+#if test x"${FC_ACT}" = x"ifort"; then
+if test x"${FC_ACT}" = x"ifx"; then
   I_ARCH=""
   if test ${OPT_AVX} -eq 1 ; then
     I_ARCH=" -axAVX "
@@ -484,7 +545,7 @@ if test x"${FC_ACT}" = x"ifort"; then
 #    I_ARCH=" -xHOST "
     I_ARCH=" "
   fi
-  I_BASE=${OMP}" -g -fp-model strict -inline-level=1 "
+  I_BASE=${OMP}" -g -fp-model strict -traceback -inline-level=1 "
 fi
 
 ## For GNU compiler architecture-oriented options
@@ -500,13 +561,14 @@ if test x"${FC_ACT}" = x"gfortran"; then
   elif test ${OPT_SKYLAKE_AVX512} -eq 1 ; then
     G_ARCH=" -march=skylake-avx512 "
   fi
-  G_BASE=" -g -fopenmp "
+  G_BASE=" -g -fopenmp -fbacktrace -rdynamic"
 fi
 
 ## For Fujitsu compiler architecture-oriented options
 if test x"${FC_ACT}" = x"mpifrtpx"; then
   F_ARCH=""
-  F_BASE=" -g -Kopenmp,openmp_ordered_reduction "
+#  F_BASE="-lstdc++ -lmpi_cxx -Kopenmp,openmp_ordered_reduction "
+  F_BASE="-Nlibomp --linkstl=libc++ -lc++ -Kopenmp,openmp_ordered_reduction "
 fi
 
 
@@ -519,8 +581,10 @@ if test x"${ac_test_FFLAGS}" = x"set"; then
 
 else
 
-  if   test x"${FC_ACT}" = x"ifort"; then
-    FFLAGS=${I_BASE}" -Ofast "${I_ARCH}" -W1 -Winline"
+  #if   test x"${FC_ACT}" = x"ifort"; then
+  if   test x"${FC_ACT}" = x"ifx"; then
+    #FFLAGS=${I_BASE}" -O0 "${I_ARCH}" -W1 -Winline"
+    FFLAGS=${I_BASE}" -O0 "${I_ARCH}
     
   elif test x"${FC_ACT}" = x"gfortran"; then
     FFLAGS=${G_BASE}" -O3 "${G_ARCH}
@@ -544,8 +608,10 @@ if test x"${ac_test_FCFLAGS}" = x"set"; then
 
 else
 
-  if   test x"${FC_ACT}" = x"ifort"; then
-    FCFLAGS=${I_BASE}" -Ofast "${I_ARCH}" -W1 -Winline"
+  #if   test x"${FC_ACT}" = x"ifort"; then
+  if   test x"${FC_ACT}" = x"ifx"; then
+    #FCFLAGS=${I_BASE}" -Ofast "${I_ARCH}" -W1 -Winline"
+    FCFLAGS=${I_BASE}" -O3 "${I_ARCH}
     
   elif test x"${FC_ACT}" = x"gfortran"; then
     FCFLAGS=${G_BASE}" -O3 "${G_ARCH}
@@ -565,8 +631,10 @@ fi
 
 # FFLAGS0 (special flags)
 
-if   test x"${FC_ACT}" = x"ifort"; then
-  FFLAGS0=${I_BASE}" -O0 -W1 -Winline"
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
+  #FFLAGS0=${I_BASE}" -Ofast -W1 -Winline"
+  FFLAGS0=${I_BASE}" -O3 "
   
 elif test x"${FC_ACT}" = x"gfortran"; then
   FFLAGS0=${G_BASE}" -O0"
@@ -591,7 +659,8 @@ if test x"${ac_test_CFLAGS}" = x"set"; then
 
 else
 
-  if   test x"${FC_ACT}" = x"ifort"; then
+  #if   test x"${FC_ACT}" = x"ifort"; then
+  if   test x"${FC_ACT}" = x"ifx"; then
     CFLAGS=${I_BASE}" -O3 "${I_ARCH}" -Wall"
     
   elif test x"${FC_ACT}" = x"gfortran"; then
@@ -613,14 +682,17 @@ fi
 
 # CFLAGS0 (special flags)
 
-if   test x"${FC_ACT}" = x"ifort"; then
-  CFLAGS0=${I_BASE}" -O0 -Wall"
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
+  #CFLAGS0=${I_BASE}" -O3 -Wall -Wextra  -Wcheck -Wpointer-arith -Wuninitialized" 
+  CFLAGS0=${I_BASE}" -O3 -Wall -Wextra -Wpointer-arith -Wuninitialized" 
   
 elif test x"${FC_ACT}" = x"gfortran"; then
   CFLAGS0=${G_BASE}" -O0 -Wall"
   
 elif test x"${FC_ACT}" = x"mpifrtpx"; then
-  CFLAGS0=${F_BASE}
+  #CFLAGS0="-Nclang -Nlibomp -Kopenmp -Kfast,ocl,simd,swp -Wall -Wextra -Wswitch-default -stdlib=libc++ -lstdc++ "${F_ARCH}
+  CFLAGS0="-Nclang -Nlibomp -Kopenmp -Kfast,ocl,simd,swp -Wall -Wextra -Wswitch-default -stdlib=libc++ -lc++ "${F_ARCH}
   
 elif test x"${FC_ACT}" = x"mpixlf90_r"; then
   CFLAGS0="-qsmp=omp -qthreaded -O0 -qessl -qstrict"
@@ -635,8 +707,9 @@ AC_SUBST(CFLAGS0)
 
 # LDFLAGS
 if test -z "${LDFLAGS}"; then
-  if   test x"${FC_ACT}" = x"ifort"; then
-    LDFLAGS=${I_BASE}" -W1"
+  #if   test x"${FC_ACT}" = x"ifort"; then
+  if   test x"${FC_ACT}" = x"ifx"; then
+    LDFLAGS=${I_BASE}" -W1 -lstdc++"
   
   elif test x"${FC_ACT}" = x"gfortran"; then
     LDFLAGS=${G_BASE}
@@ -655,18 +728,15 @@ fi
 
 
 # SHARED_LDFLAGS
-if   test x"${FC_ACT}" = x"ifort"; then
-  if test x"${OS_MACOS}" = x"yes"; then
-    SHARED_LDFLAGS=" -shared"
-  else
-    SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.$SUFFIX_DYLIB -W1"
-  fi
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
+  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.so -W1"
   
 elif test x"${FC_ACT}" = x"gfortran"; then
-  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.$SUFFIX_DYLIB"
+  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.so"
   
 elif test x"${FC_ACT}" = x"mpifrtpx"; then
-  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.$SUFFIX_DYLIB"
+  SHARED_LDFLAGS=" -shared -rdynamic -Wl,-soname,libEigenExa.so"
 
 elif test x"${FC_ACT}" = x"mpixlf90_r"; then
   SHARED_LDFLAGS=" -qmkshrobj "
@@ -681,7 +751,8 @@ AC_SUBST(SHARED_LDFLAGS)
 
 # Test flag
 
-if   test x"${FC_ACT}" = x"ifort"; then
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
   TEST_FLAG=""
   
 elif test x"${FC_ACT}" = x"gfortran"; then
@@ -703,7 +774,8 @@ AC_SUBST(TEST_FLAG)
 
 # Macro "-D" prefix
 
-if   test x"${FC_ACT}" = x"ifort"; then
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
   MACRO_D_PREFIX="-D"
 
 elif test x"${FC_ACT}" = x"gfortran"; then
@@ -724,7 +796,8 @@ AC_SUBST(MACRO_D_PREFIX)
 
 # Macro Fortran C-pre-processor
 
-if   test x"${FC_ACT}" = x"ifort"; then
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
   MACRO_CPP="-cpp"
   MACRO_FPP="-fpp"
 
@@ -751,12 +824,9 @@ AC_SUBST(MACRO_FPP)
 
 # Macro "-fPIC"
 
-if   test x"${FC_ACT}" = x"ifort"; then
-  if test x"${OS_MACOS}" = x"yes"; then
-    MACRO_PIC="-fminshared"
-  else
-    MACRO_PIC="-fPIC"
-  fi
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
+  MACRO_PIC="-fPIC"
 
 elif test x"${FC_ACT}" = x"gfortran"; then
   MACRO_PIC="-fPIC"
@@ -777,7 +847,8 @@ AC_SUBST(MACRO_PIC)
 
 # Macro "-module "
 
-if   test x"${FC_ACT}" = x"ifort"; then
+#if   test x"${FC_ACT}" = x"ifort"; then
+if   test x"${FC_ACT}" = x"ifx"; then
   MACRO_MODULE_PATH="-module "
 
 elif test x"${FC_ACT}" = x"gfortran"; then
@@ -813,12 +884,15 @@ AM_CONDITIONAL(SKIP_SHARED, test x"${FC_ACT}" = x"sxmpif90")
 AM_CONDITIONAL(SKIP_SHARED, test ${USE_SHARED_LIB} -eq 0)
 AM_CONDITIONAL(ORENAME_SHARED, test x"${FC_ACT}" = x"mpifrtpx")
 AM_CONDITIONAL(SKIP_DEBUG, test x"${DEBUG}" = x0)
-AM_CONDITIONAL(OS_MACOS, test x"${OS_MACOS}" = x"yes")
 
 ## eigen_s version
 #
 
-AC_ARG_ENABLE([eigen_s],,
+AC_ARG_ENABLE([eigen_s],
+,
+#    [AS_HELP_STRING(
+#      [--enable-eigen_s@<:@=ARG@:>@],
+#      [set Eigen_S version (from 0 to 1, default = 0) 0:miotsukushi,1:Akashi])] ,
     [
       if test x"${enableval}" = x"yes"; then
 	    EIGEN_S_ARG=0
@@ -838,7 +912,6 @@ AC_SUBST(EIGEN_S_ARG)
 
 AC_CONFIG_FILES([Makefile
                 src/Makefile
-                C/Makefile
 		benchmark_h/Makefile
 		benchmark/Makefile])
 
