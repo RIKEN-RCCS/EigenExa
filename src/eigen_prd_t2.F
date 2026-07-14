@@ -176,7 +176,7 @@
       if (TRD_nnod > 1) then
         u_t(1:y_pos) = v_t(1:y_pos,1)
         u_t(1+y_pos:2*y_pos) = v_t(1:y_pos,2)
-        call reduce_dbl(u_t, v_t, 2*y_pos, 1, x_COMM_WORLD)
+        call reduce_dbl_C(u_t, v_t, 2*y_pos, 1, x_COMM_WORLD)
         v_t(1:y_pos,1) = u_t(1:y_pos)
         v_t(1:y_pos,2) = u_t(1+y_pos:2*y_pos)
       end if
@@ -200,7 +200,7 @@
       if (TRD_nnod > 1) then
         v_t(1:x_pos,1) = v_x(1:x_pos,1)
         v_t(1+x_pos:2*x_pos,1) = v_x(1:x_pos,2)
-        call reduce_dbl(v_t, u_t, 2*x_pos, 2, y_COMM_WORLD)
+        call reduce_dbl_C(v_t, u_t, 2*x_pos, 2, y_COMM_WORLD)
         v_x(1:x_pos,1) = v_t(1:x_pos,1)
         v_x(1:x_pos,2) = v_t(1+x_pos:2*x_pos,1)
       end if

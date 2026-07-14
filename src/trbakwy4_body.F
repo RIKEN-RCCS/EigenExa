@@ -24,20 +24,20 @@
 
 
       public  :: eigen_trbakwy_block_body_C
-      public  :: eigen_trbakwy_block_body
+      ! public  :: eigen_trbakwy_block_body
 #if AT_BCAST_OVERLAP
 !$    private :: trbk_decide_overlap_level
 !$    private :: trbk_decide_overlap_level_C
 #endif
-      private :: eigen_trbakwy_block_body1
-      private :: eigen_trbakwy_block_body2
+      ! private :: eigen_trbakwy_block_body1
+      ! private :: eigen_trbakwy_block_body2
 
       interface
 
         subroutine trbk_decide_overlap_level_C(i)
      &  bind(C, name="trbk_decide_overlap_level_Cpp")
-          use iso_c_binding
-          import :: c_int
+          use, intrinsic :: iso_c_binding , only: c_int
+          !import :: c_int
           integer(c_int), value, intent(in) :: i
         end subroutine trbk_decide_overlap_level_C
 
@@ -46,8 +46,8 @@
      &    v, nm, m, i,
      &    ss, tt, nss, iblk,
      &    dcom, dx, dy, dz) bind(C, name="eigen_trbakwy_block_body_dbl")
-          use iso_c_binding
-          import :: c_int, c_double
+          use, intrinsic :: iso_c_binding , only: c_int, c_double
+          !import :: c_int, c_double
           integer(c_int), value, intent(in) :: 
      &    local_nvec, nmz, nm, m, i, nss, iblk
           real(c_double) :: z(nmz,*)
@@ -63,9 +63,9 @@
      &    ss, sm,
      &    i_2, i_3, j_2, j_3)
      &    bind(C, name="eigen_trbakwy_block_body1_dbl")
-          use iso_c_binding
+          use, intrinsic :: iso_c_binding , only: c_int, c_double
           use eigen_devel_mod, only : nsm
-          import :: c_int, c_double
+          !import :: c_int, c_double
           integer(c_int), value :: nmz, nm, m, i_2, i_3, j_2, j_3
           real(c_double) :: z(nmz,*)
           real(c_double) :: v(nm,*)
@@ -92,7 +92,7 @@
         end subroutine eigen_trbakwy_block_body2_C
 
       end interface
-
+#if 0
       contains
 
 #if __FUJITSU
@@ -812,5 +812,5 @@
       return
 
       end subroutine  eigen_trbakwy_block_body2
-
+#endif
       end module trbakwy4_body_mod

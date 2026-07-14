@@ -200,7 +200,7 @@
         end do
 !$OMP END PARALLEL DO
       end if
-      call allgather_dbl(w(1), wk(2), nv, 1, TRD_COMM_WORLD)
+      call allgather_dbl_C(w(1), wk(2), nv, 1, TRD_COMM_WORLD)
       s = sturm(lb_, d, e, n, m_epsilon)
       k = sturm(ub_, d, e, n, m_epsilon)
       wk(1  ) = dble(s)
@@ -301,7 +301,7 @@
 #endif
       end if
 
-      call allgather_dbl(w(1), wk(1), nv, 2, TRD_COMM_WORLD)
+      call allgather_dbl_C(w(1), wk(1), nv, 2, TRD_COMM_WORLD)
 
 !$OMP PARALLEL DO
       do j=1,n

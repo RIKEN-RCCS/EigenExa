@@ -228,6 +228,15 @@
         end function eigen_owner_node_XY_interface
       end interface
 
+      interface
+        subroutine eigen_init0_C(comm, order)
+     &     bind(c, name= "eigen_init0_C")
+          use iso_c_binding
+          integer(c_int),    value, intent(in) :: comm
+          character(c_char), value, intent(in) :: order
+        end subroutine eigen_init0_C
+      end interface
+
       ! significant drivers
       public  :: eigen_s0
       public  :: eigen_init0
@@ -972,14 +981,14 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call reduce_dbl(buff1(1),buff2(1),1024,0,y_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),1024,0,y_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call reduce_dbl(buff1(1),buff2(1),2048,0,x_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),2048,0,x_COMM_WORLD)
           call MPI_Barrier(x_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s1 = s1 + (d2-d1)
@@ -989,14 +998,14 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call reduce_dbl(buff1(1),buff2(1),1024,0,x_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),1024,0,x_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call reduce_dbl(buff1(1),buff2(1),2048,0,y_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),2048,0,y_COMM_WORLD)
           call MPI_Barrier(y_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s2 = s2 + (d2-d1)
@@ -1023,18 +1032,18 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call reduce_dbl(buff1(1),buff2(1),1024,0,y_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),1024,0,y_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call reduce_dbl(buff1(1),buff2(1),1024,0,x_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),1024,0,x_COMM_WORLD)
 !$OMP END MASTER
           continue
 !$OMP MASTER
-          call reduce_dbl(buff2(1),buff1(1),1024,0,x_COMM_WORLD)
+          call reduce_dbl_C(buff2(1),buff1(1),1024,0,x_COMM_WORLD)
           call MPI_Barrier(x_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s1 = s1 + (d2-d1)
@@ -1044,18 +1053,18 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call reduce_dbl(buff1(1),buff2(1),1024,0,x_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),1024,0,x_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call reduce_dbl(buff1(1),buff2(1),1024,0,y_COMM_WORLD)
+          call reduce_dbl_C(buff1(1),buff2(1),1024,0,y_COMM_WORLD)
 !$OMP END MASTER
           continue
 !$OMP MASTER
-          call reduce_dbl(buff2(1),buff1(1),1024,0,y_COMM_WORLD)
+          call reduce_dbl_C(buff2(1),buff1(1),1024,0,y_COMM_WORLD)
           call MPI_Barrier(y_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s2 = s2 + (d2-d1)
@@ -1084,14 +1093,14 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call bcast_dbl(buff1(1),1024,1,0,y_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),1024,1,0,y_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call bcast_dbl(buff1(1),2048,1,0,x_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),2048,1,0,x_COMM_WORLD)
           call MPI_Barrier(x_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s1 = s1 + (d2-d1)
@@ -1101,14 +1110,14 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call bcast_dbl(buff1(1),1024,1,0,x_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),1024,1,0,x_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call bcast_dbl(buff1(1),2048,1,0,y_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),2048,1,0,y_COMM_WORLD)
           call MPI_Barrier(y_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s2 = s2 + (d2-d1)
@@ -1135,18 +1144,18 @@
 
         do i = 1, 10
 !$OMP MASTER
-          call bcast_dbl(buff1(1),1024,1,0,y_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),1024,1,0,y_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call bcast_dbl(buff1(1),1024,1,0,x_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),1024,1,0,x_COMM_WORLD)
 !$OMP END MASTER
           continue
 !$OMP MASTER
-          call bcast_dbl(buff2(1),1024,1,0,x_COMM_WORLD)
+          call bcast_dbl_C(buff2(1),1024,1,0,x_COMM_WORLD)
           call MPI_Barrier(x_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s1 = s1 + (d2-d1)
@@ -1156,18 +1165,18 @@
 
         do  i = 1, 10
 !$OMP MASTER
-          call bcast_dbl(buff1(1),1024,1,0,x_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),1024,1,0,x_COMM_WORLD)
 !$OMP END MASTER
           continue
 !$OMP MASTER
           call MPI_Barrier(TRD_COMM_WORLD,ierr)
           d1 = eigen_get_wtime()
-          call bcast_dbl(buff1(1),1024,1,0,y_COMM_WORLD)
+          call bcast_dbl_C(buff1(1),1024,1,0,y_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
           continue
 !$OMP MASTER
-          call bcast_dbl(buff2(1),1024,1,0,y_COMM_WORLD)
+          call bcast_dbl_C(buff2(1),1024,1,0,y_COMM_WORLD)
           call MPI_Barrier(y_COMM_WORLD,ierr)
           d2 = eigen_get_wtime()
           if (i > 5) s2 = s2 + (d2-d1)
@@ -2941,6 +2950,7 @@
          integer(c_int),      intent(in),value :: comm
          character(c_char),   intent(in),value :: order
          call eigen_init0(comm = comm, order = order)
+         call eigen_init0_C(comm = comm, order = order)
       end subroutine
          
 

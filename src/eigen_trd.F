@@ -624,7 +624,7 @@
 !     w':= w-uv-vu
 !     
 !$OMP MASTER
-          call reduce_dbl(v_nn, u_t, i-1, 1, x_COMM_WORLD)
+          call reduce_dbl_C(v_nn, u_t, i-1, 1, x_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
 

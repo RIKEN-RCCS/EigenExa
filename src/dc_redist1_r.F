@@ -230,7 +230,7 @@
 
 
             if (is_size > 0) then
-              call irecv_dbl(wk1, is_size, her_rank, iq_s,
+              call irecv_dbl_C(wk1, is_size, her_rank, iq_s,
      &             y_COMM_WORLD)
             end if
 
@@ -244,13 +244,13 @@
               end do
 !$OMP END PARALLEL DO
 
-              call isend_dbl(wk2, ir_size, his_rank, iq_r,
+              call isend_dbl_C(wk2, ir_size, his_rank, iq_r,
      &             y_COMM_WORLD)
             end if
 
 
             if (is_size > 0) then
-              call wait_dbl(iq_s)
+              call wait_dbl_C(iq_s)
 
               K1=j_begin2+NB*(i-1)
 !$OMP PARALLEL DO
@@ -263,7 +263,7 @@
             end if
 
             if (ir_size > 0) then
-              call wait_dbl(iq_r)
+              call wait_dbl_C(iq_r)
             end if
 
           end do

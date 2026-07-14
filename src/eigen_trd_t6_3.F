@@ -150,7 +150,7 @@
 !$OMP BARRIER
 
 !$OMP MASTER
-      call bcast_dbl(u_t(1+2*num_v_done), 1, x_root, 0, x_COMM_WORLD)
+      call bcast_dbl_C(u_t(1+2*num_v_done), 1, x_root, 0, x_COMM_WORLD)
 !$OMP END MASTER
 
 !$    if (local_size==1 .or. local_rank>0) then
@@ -309,14 +309,14 @@
         if (flag_oncache) then
           l_2 = num_v_done + 1
           x_pos = eigen_translate_g2l(L+l_2-1, 'X')
-          call datacast_dblx(l_2, v_y, v_x, ldv,
+          call datacast_dblx_C(l_2, v_y, v_x, ldv,
      &                       v_t(1), u_t(1), L+l_2-1, 2)
           do k_1=1,l_2
           call eigen_vector_zeropad_y(v_y(1+ldv*(k_1-1)), L+k_1-1)
           end do
         else
           x_pos = eigen_translate_g2l(L, 'X')
-          call datacast_dbl(v_y(1), v_x(1), v_t(1), u_t(1), L, 2)
+          call datacast_dbl_C(v_y(1), v_x(1), v_t(1), u_t(1), L, 2)
           call eigen_vector_zeropad_y(v_y(1), L)
         end if
       end if

@@ -203,7 +203,7 @@
      &     N, MPI_DOUBLE_PRECISION,
      &     MPI_SUM, TRD_COMM_WORLD, ERR_MPI )
 #else
-          call ALLREDUCE_binary_sum(
+          call ALLREDUCE_binary_sum_C(
      &         TRD_COMM_WORLD,N,WORK( 1 ), Z( 1 ))
 #endif
 !$OMP END MASTER

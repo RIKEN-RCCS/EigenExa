@@ -118,9 +118,9 @@
          y_owner_nod = eigen_owner_node (i, 'Y')
          x_owner_nod = eigen_owner_node (L, 'X')
          if ( y_owner_nod == y_inod ) then
-         call bcast_dbl( e_out(i:), 1, x_owner_nod, 1, x_COMM_WORLD )
+         call bcast_dbl_C( e_out(i:), 1, x_owner_nod, 1, x_COMM_WORLD )
          end if
-         call bcast_dbl( e_out(i:), 1, y_owner_nod, 1, y_COMM_WORLD )
+         call bcast_dbl_C( e_out(i:), 1, y_owner_nod, 1, y_COMM_WORLD )
       end if
 
       if ( diag_0 > 0 ) then
@@ -140,8 +140,8 @@
 
       u_t(1) = ZEROZ
       call c_f_pointer(c_loc(u_t),u_r,shape=[n])
-      call reduce_dbl(d_out, u_r, n, 1, x_COMM_WORLD)
-      call reduce_dbl(d_out, u_r, n, 1, y_COMM_WORLD)
+      call reduce_dbl_C(d_out, u_r, n, 1, x_COMM_WORLD)
+      call reduce_dbl_C(d_out, u_r, n, 1, y_COMM_WORLD)
       u_r=>null()
 
       local_rank = 0

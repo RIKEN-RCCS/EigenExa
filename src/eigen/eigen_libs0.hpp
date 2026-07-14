@@ -223,47 +223,47 @@ inline void eigen_init_comm_setup(std::optional<MPI_Comm> comm_opt) {
 }
 
 inline void eigen_init_omp_setup() {
-#ifdef _OPENMP
-  if (TRD_COMM_WORLD != MPI_COMM_NULL) {
-    int64_t ierr = 0;
-    int64_t local_size = 1;
-
-#pragma omp parallel
-#pragma omp master
-    {
-      local_size = omp_get_num_threads();
-    }
-
-    int64_t th0[2] = {local_size, -local_size};
-    int64_t th1[2] = {0, 0};
-
-    MPI_Allreduce(th0, th1, 2, MPI_INT, MPI_MAX, TRD_COMM_WORLD);
-
-    int64_t j = th1[0] + th1[1];
-    if (j != 0) {
-      MPI_Barrier(TRD_COMM_WORLD);
-      std::cout.flush();
-      if (TRD_inod == 1) {
-        std::cerr << "*************\n"
-                     "** CAUTION **\n"
-                     "*************\n"
-                     "EigenExa supports only homogeneous thread setting!\n"
-                     "EigenExa terminates this run.\n";
-      }
-
-      for (int64_t i = 0; i < 2; ++i) {
-        MPI_Barrier(TRD_COMM_WORLD);
-        std::cout.flush();
-      }
-
-      MPI_Barrier(TRD_COMM_WORLD);
-      std::cout.flush();
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-      std::cout.flush();
-      MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
-    }
-  }
-#endif
+// #ifdef _OPENMP
+//   if (TRD_COMM_WORLD != MPI_COMM_NULL) {
+//     int64_t ierr = 0;
+//     int64_t local_size = 1;
+// 
+// #pragma omp parallel
+// #pragma omp master
+//     {
+//       local_size = omp_get_num_threads();
+//     }
+// 
+//     int64_t th0[2] = {local_size, -local_size};
+//     int64_t th1[2] = {0, 0};
+// 
+//     MPI_Allreduce(th0, th1, 2, MPI_INT, MPI_MAX, TRD_COMM_WORLD);
+// 
+//     int64_t j = th1[0] + th1[1];
+//     if (j != 0) {
+//       MPI_Barrier(TRD_COMM_WORLD);
+//       std::cout.flush();
+//       if (TRD_inod == 1) {
+//         std::cerr << "*************\n"
+//                      "** CAUTION **\n"
+//                      "*************\n"
+//                      "EigenExa supports only homogeneous thread setting!\n"
+//                      "EigenExa terminates this run.\n";
+//       }
+// 
+//       for (int64_t i = 0; i < 2; ++i) {
+//         MPI_Barrier(TRD_COMM_WORLD);
+//         std::cout.flush();
+//       }
+// 
+//       MPI_Barrier(TRD_COMM_WORLD);
+//       std::cout.flush();
+//       std::this_thread::sleep_for(std::chrono::seconds(1));
+//       std::cout.flush();
+//       MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
+//     }
+//   }
+// #endif
 }
 
 inline char GRID_major = 'C';

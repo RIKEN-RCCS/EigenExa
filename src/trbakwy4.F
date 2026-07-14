@@ -26,9 +26,9 @@
       private
       
 
-      public  :: eigen_common_trbakwy
+      ! public  :: eigen_common_trbakwy
       public  :: eigen_common_trbakwy_C
-      private :: eigen_trbakwy_body
+      ! private :: eigen_trbakwy_body
       private :: trbakwy_datacast_C
 
       interface
@@ -100,7 +100,7 @@
           integer(c_int), value, intent(in)   :: siz
         end subroutine alloc_trbk_buf_C
       end interface
-
+#if 0
       contains
 
 !--------*---------*---------*---------*---------*---------*---------*-*
@@ -892,5 +892,5 @@
       return
 
       end subroutine
-
+#endif
       end module trbakwy4_mod

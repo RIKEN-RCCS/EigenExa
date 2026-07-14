@@ -111,7 +111,7 @@
         if ( k0 == y_nnod ) then
           i_1 = j + mod(y_inod-i_root+y_nnod, y_nnod)
 !$OMP MASTER
-          call allgather_dbl(u_x(1, i_1), buffer, x_pos,
+          call allgather_dbl_C(u_x(1, i_1), buffer, x_pos,
      &         1, y_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
@@ -125,7 +125,7 @@
         else
 !$OMP MASTER
           y_owner_nod = eigen_owner_node (i_base+j, 'Y')
-          call bcastw_dbl(u_x(1, j), x_pos, y_owner_nod,
+          call bcastw_dbl_C(u_x(1, j), x_pos, y_owner_nod,
      &         ldv, k0, buffer, 1, y_COMM_WORLD)
 !$OMP END MASTER
         end if

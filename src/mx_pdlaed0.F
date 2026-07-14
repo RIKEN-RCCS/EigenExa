@@ -184,7 +184,7 @@
          END IF
       END DO
 !     
-      call reduce_dbl( D, WORK, N, 1, TRD_COMM_WORLD )
+      call reduce_dbl_C( D, WORK, N, 1, TRD_COMM_WORLD )
       d2 = MPI_WTIME()
       p_time0 = p_time0 + (d2-d1)
 !     

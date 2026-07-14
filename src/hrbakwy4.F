@@ -287,8 +287,8 @@
 !$OMP BARRIER
 *
 !$OMP MASTER
-          call barrier( y_COMM_WORLD )
-          call barrier( x_COMM_WORLD )
+          call barrier_C( y_COMM_WORLD )
+          call barrier_C( x_COMM_WORLD )
 !$OMP END MASTER
 !$    if ( omp_get_num_threads() == 1 .OR.
 !$   +     omp_get_thread_num() == 1 ) then

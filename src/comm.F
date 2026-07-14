@@ -46,16 +46,127 @@
       public  :: allreduce_binary_sum
       public  :: allreduce_binary_prod
 
+      public  :: pack_dbl_C
+      public  :: pack1_dbl_C
+      public  :: unpack_dbl_C
+      public  :: unpack1_dbl_C
+      public  :: send_dbl_C
+      public  :: send_dblt_C
+      public  :: isend_dbl_C
+      public  :: isend_dblt_C
+      public  :: recv_dbl_C
+      public  :: irecv_dbl_C
+      public  :: irecv_dblt_C
+      public  :: wait_dbl_C
+      public  :: waitall_dbl_C
       public  :: barrier_C
       public  :: bcast_dbl_C
       public  :: bcastw_dbl_C
       public  :: reduce_dbl_C
       public  :: allgather_dbl_C
+      public  :: datacast_dbl_C
+      public  :: datacast_dbl2_C
+      public  :: datacast_dblx_C
+      public  :: print_bcast_algorithm_C  ! not used
+      public  :: print_reduce_algorithm_C  ! not used
+      public  :: print_gather_algorithm_C  ! not used
 
+      public  :: allreduce_binary_sum_C
+      public  :: allreduce_binary_prod_C
+      
       interface
         subroutine barrier_C(fcomm) bind(C, name="comm_barrier")
           use iso_c_binding
           integer(c_int) :: fcomm
+        end subroutine
+
+        subroutine pack_dbl_C(buf, n, buffer, ptr)
+     &  bind(C, name="comm_pack_dbl")
+          use iso_c_binding
+          real(c_double) :: buf(*), buffer(*)
+          integer(c_int) :: n, ptr
+        end subroutine
+
+        subroutine pack1_dbl_C(buf, buffer, ptr)
+     &  bind(C, name="comm_pack1_dbl")
+          use iso_c_binding
+          real(c_double) :: buf, buffer(*)
+          integer(c_int) :: ptr
+        end subroutine
+
+        subroutine unpack_dbl_C(buf, n, buffer, ptr)
+     &  bind(C, name="comm_unpack_dbl")
+          use iso_c_binding
+          real(c_double) :: buf(*), buffer(*)
+          integer(c_int) :: n, ptr
+        end subroutine
+
+        subroutine unpack1_dbl_C(buf, buffer, ptr)
+     &  bind(C, name="comm_unpack1_dbl")
+          use iso_c_binding
+          real(c_double) :: buf, buffer(*)
+          integer(c_int) :: ptr
+        end subroutine
+
+        subroutine send_dbl_C(buf, n, idest, fcomm)
+     &  bind(C, name="comm_send_dbl")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, idest, fcomm
+        end subroutine
+
+        subroutine send_dblt_C(buf, n, idest, itag, fcomm)
+     &  bind(C, name="comm_send_dblt")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, idest, itag, fcomm
+        end subroutine
+
+        subroutine isend_dbl_C(buf, n, idest, ireq, fcomm)
+     &  bind(C, name="comm_isend_dbl")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, idest, ireq, fcomm
+        end subroutine
+
+        subroutine isend_dblt_C(buf, n, idest, itag, ireq, fcomm)
+     &  bind(C, name="comm_isend_dblt")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, idest, itag, ireq, fcomm
+        end subroutine
+
+        subroutine recv_dbl_C(buf, n, isrc, fcomm)
+     &  bind(C, name="comm_recv_dbl")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, isrc, fcomm
+        end subroutine
+
+        subroutine irecv_dbl_C(buf, n, isrc, ireq, fcomm)
+     &  bind(C, name="comm_irecv_dbl")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, isrc, ireq, fcomm
+        end subroutine
+
+        subroutine irecv_dblt_C(buf, n, isrc, itag, ireq, fcomm)
+     &  bind(C, name="comm_irecv_dblt")
+          use iso_c_binding
+          real(c_double) :: buf(*)
+          integer(c_int) :: n, isrc, itag, ireq, fcomm
+        end subroutine
+
+        subroutine wait_dbl_C(ireq) bind(C, name="comm_wait_dbl")
+          use iso_c_binding
+          integer(c_int) :: ireq
+        end subroutine
+
+        subroutine waitall_dbl_C(n, ireq)
+     &  bind(C, name="comm_waitall_dbl")
+          use iso_c_binding
+          integer(c_int) :: n
+          integer(c_int) :: ireq(*)
         end subroutine
 
         subroutine bcast_dbl_C(buf, n, root, col, fcomm) 
@@ -85,6 +196,61 @@
           real(c_double) :: sendbuf(*), recvbuf(*)
           integer(c_int) :: n, col_id, fcomm
         end subroutine
+
+        subroutine datacast_dbl_C(u_y, u_x, u_t, u_s, n, col_id)
+     &  bind(C, name="comm_datacast_dbl")
+          use iso_c_binding
+          real(c_double) :: u_y(*), u_x(*), u_t(*), u_s(*)
+          integer(c_int) :: n, col_id
+        end subroutine
+
+        subroutine datacast_dbl2_C(ur_y, ui_y, ur_x, ui_x, u_t, u_s,
+     &  n, col_id) bind(C, name="comm_datacast_dbl2")
+          use iso_c_binding
+          real(c_double) :: ur_y(*), ui_y(*), ur_x(*), ui_x(*)
+          real(c_double) :: u_t(*), u_s(*)
+          integer(c_int) :: n, col_id
+        end subroutine
+
+        subroutine datacast_dblx_C(nk, u_y, u_x, ldv, u_t, u_s,
+     &  n, col_id) bind(C, name="comm_datacast_dblx")
+          use iso_c_binding
+          integer(c_int) :: nk
+          real(c_double) :: u_y(*), u_x(*)
+          integer(c_int) :: ldv
+          real(c_double) :: u_t(*), u_s(*)
+          integer(c_int) :: n, col_id
+        end subroutine
+
+        subroutine print_bcast_algorithm_C()
+     &  bind(C, name="comm_print_bcast_algorithm")
+          use iso_c_binding
+        end subroutine
+
+        subroutine print_reduce_algorithm_C()
+     &  bind(C, name="comm_print_reduce_algorithm")
+          use iso_c_binding
+        end subroutine
+
+        subroutine print_gather_algorithm_C()
+     &  bind(C, name="comm_print_gather_algorithm")
+          use iso_c_binding
+        end subroutine
+
+        subroutine allreduce_binary_sum_C(fcomm, s, R, R0)
+     &  bind(C, name="comm_allreduce_binary_sum_dbl")
+          use iso_c_binding
+          integer(c_int) :: fcomm, s
+          real(c_double) :: R(*), R0(*)
+        end subroutine
+
+        subroutine allreduce_binary_prod_C(fcomm, s, R, R0)
+     &  bind(C, name="comm_allreduce_binary_prod_dbl")
+          use iso_c_binding
+          integer(c_int) :: fcomm, s
+          real(c_double) :: R(*), R0(*)
+        end subroutine
+
       end interface
 
       contains
@@ -1835,6 +2001,11 @@
 #if TIMER_PRINT
       timer = eigen_get_wtime()
 #endif
+      if (.not. associated(p0_)) then
+        print *, "NOT ASSOCIATED"
+      else
+        print *, "ASSOCIATED", p0_(0)
+      endif
 
       if ( x_nnod == 1 ) then
         if ( y_nnod == 1 ) then

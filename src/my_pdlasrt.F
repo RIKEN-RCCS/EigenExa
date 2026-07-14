@@ -281,16 +281,16 @@
                IF( SBUF.NE.0 ) THEN
                   II = II + 1
                   IPWORK = IPW + ( IWORK( PSQ+COL )-1 )*NP
-                  call isend_dbl( WORK( IPWORK ), NP*SBUF,
+                  call isend_dbl_C( WORK( IPWORK ), NP*SBUF,
      &                 COL+1, RREQ(II), y_COMM_WORLD )
                END IF
  100        CONTINUE
-            IF ( II > 0 ) call waitall_dbl( II, RREQ )
+            IF ( II > 0 ) call waitall_dbl_C( II, RREQ )
 !     
          ELSE
 !     
             IF( K.NE.0 ) THEN
-               call recv_dbl( WORK( IPW ), NP*K,
+               call recv_dbl_C( WORK( IPW ), NP*K,
      &              QCOL+1, y_COMM_WORLD )
 !$OMP PARALLEL DO
 !$OMP+         PRIVATE(L,I,JJQ,IPQ,IPWORK)

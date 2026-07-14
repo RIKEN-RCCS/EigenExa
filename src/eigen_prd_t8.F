@@ -263,7 +263,7 @@
       end if
 
 
-      call reduce_dbl(d_out(1),   u_t(1), n, 6, TRD_COMM_WORLD)
+      call reduce_dbl_C(d_out(1),   u_t(1), n, 6, TRD_COMM_WORLD)
       if (mod(n,2) == 1) then
 !     x * *
 !     x x * o
@@ -273,7 +273,7 @@
         u_t(1) = e_out(2,1)
         u_t(2) = e_out(3,1)
         u_t(3) = e_out(3,2)
-        call reduce_dbl(u_t(1), u_t(4), 3, 6, TRD_COMM_WORLD)
+        call reduce_dbl_C(u_t(1), u_t(4), 3, 6, TRD_COMM_WORLD)
         e_out(2,1) = u_t(1)
         e_out(3,1) = u_t(2)
         e_out(3,2) = u_t(3)
@@ -285,10 +285,10 @@
         y_owner_nod = eigen_owner_node(2, 'Y')
         x_owner_nod = eigen_owner_node(1, 'X')
         if (y_owner_nod == y_inod) then
-          call bcast_dbl(e_out(2,1), 1, x_owner_nod,
+          call bcast_dbl_C(e_out(2,1), 1, x_owner_nod,
      &         2, x_COMM_WORLD)
         end if
-        call bcast_dbl(e_out(2,1), 1, y_owner_nod,
+        call bcast_dbl_C(e_out(2,1), 1, y_owner_nod,
      &       2, y_COMM_WORLD)
       end if
 

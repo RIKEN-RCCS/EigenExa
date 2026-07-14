@@ -345,7 +345,7 @@
               aa(6) = aa(6) + (d2-d1)
 
               d1 = eigen_get_wtime()
-              call isend_dbl(wk2, ir_size, his_rank, iq(2), x_COMM_W
+              call isend_dbl_C(wk2, ir_size, his_rank, iq(2), x_COMM_W
      &             ORLD)
               d2 = eigen_get_wtime()
               aa(5) = aa(5) + (d2-d1)
@@ -377,7 +377,7 @@
             if (is_size > 0) then
 
               d1 = eigen_get_wtime()
-              call irecv_dbl(wk1, is_size, her_rank, iq(1), x_COMM_W
+              call irecv_dbl_C(wk1, is_size, her_rank, iq(1), x_COMM_W
      &             ORLD)
               d2 = eigen_get_wtime()
               aa(4) = aa(4) + (d2-d1)
@@ -389,7 +389,7 @@
             if (ir_size > 0) then
 
               d1 = eigen_get_wtime()
-              call wait_dbl(iq(2))
+              call wait_dbl_C(iq(2))
               d2 = eigen_get_wtime()
               aa(5) = aa(5) + (d2-d1)
 
@@ -399,7 +399,7 @@
             if (is_size > 0) then
 
               d1 = eigen_get_wtime()
-              call wait_dbl(iq(1))
+              call wait_dbl_C(iq(1))
               d2 = eigen_get_wtime()
               aa(4) = aa(4) + (d2-d1)
 

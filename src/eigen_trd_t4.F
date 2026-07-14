@@ -118,7 +118,7 @@
       if (flag_overlap .or. flag_oncache) then
 
         x_pos = eigen_translate_g2l(L, 'X')
-        call datacast_dbl(u_y(1), u_x(1), v_t(1), u_t(1), L, 1)
+        call datacast_dbl_C(u_y(1), u_x(1), v_t(1), u_t(1), L, 1)
 
         call eigen_vector_zeropad_x(u_x(1), L)
         call eigen_vector_zeropad_y(u_y(1), L)
@@ -134,7 +134,7 @@
               timer_t1 = eigen_get_wtime()
             end if
           end if
-          call datacast_dbl2(u_y(1), v_y(1), u_x(1), v_x(1),
+          call datacast_dbl2_C(u_y(1), v_y(1), u_x(1), v_x(1),
      &                       v_t(1), u_t(1), i, 1)
           if (.not. flag_oncache) then
           if (flag_sample) then
@@ -146,7 +146,7 @@
         else
 
           x_pos = eigen_translate_g2l(L, 'X')
-          call datacast_dbl(u_y(1), u_x(1),
+          call datacast_dbl_C(u_y(1), u_x(1),
      &                      v_t(1), u_t(1), L, 1)
 
         end if
@@ -171,7 +171,7 @@
           if (flag_sample) then
             timer_t1 = eigen_get_wtime()
           end if
-          call datacast_dbl(v_y(1), v_x(1),
+          call datacast_dbl_C(v_y(1), v_x(1),
      &                      v_y(1-nv), u_t(1), i, 1)
           if (flag_sample) then
             timer_t1 = eigen_get_wtime() - timer_t1

@@ -345,8 +345,8 @@
 !$           if ( MPI_THREAD_MODE == MPI_THREAD_SINGLE .OR.
 !$   &            MPI_THREAD_MODE == MPI_THREAD_FUNNELED ) then
 !$OMP MASTER
-              call barrier( y_COMM_WORLD )
-              call barrier( x_COMM_WORLD )
+              call barrier_C( y_COMM_WORLD )
+              call barrier_C( x_COMM_WORLD )
 !$OMP END MASTER
 !$           else
 !$    if ( omp_get_thread_num() == 1 ) then

@@ -171,7 +171,7 @@
           u_t(1, j+1) = u_t(1, j+1) + uu_x
         end do
 
-        call reduce_dbl(u_t, v_t, 5, 4, x_COMM_WORLD)
+        call reduce_dbl_C(u_t, v_t, 5, 4, x_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
 
@@ -293,7 +293,7 @@
 
 !$OMP MASTER
         l_2 = (k_2-k_1+2)*2*MBAND
-        call reduce_dbl(u_t, v_t, l_2, 4, x_COMM_WORLD)
+        call reduce_dbl_C(u_t, v_t, l_2, 4, x_COMM_WORLD)
 !$OMP END MASTER
 !$OMP BARRIER
 
@@ -460,7 +460,7 @@
 
 !$OMP MASTER
 
-      call datacast_dbl2(vy(1, k_1-0), vy(1, k_1-1),
+      call datacast_dbl2_C(vy(1, k_1-0), vy(1, k_1-1),
      &     vx(1, k_1-0), vx(1, k_1-1), v_t, u_t, L, 2)
 
 

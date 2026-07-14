@@ -332,18 +332,18 @@
             IF( INDCOL( PJ ).EQ.INDCOL( NJ ) .AND. MYCOL.EQ.NJCOL ) THEN
                CALL DROT( NP, Q( 1, PJJ ), 1, Q( 1, NJJ ), 1, C, S )
             ELSE IF( MYCOL.EQ.PJCOL ) THEN
-               call irecv_dbl( QBUF,      NP,
+               call irecv_dbl_C( QBUF,      NP,
      &              NJCOL+1, REQ(2), y_COMM_WORLD )
-               call isend_dbl( Q(1, PJJ), NP,
+               call isend_dbl_C( Q(1, PJJ), NP,
      &              NJCOL+1, REQ(1), y_COMM_WORLD )
-               call waitall_dbl( 2, REQ )
+               call waitall_dbl_C( 2, REQ )
                CALL DROT( NP, Q( 1, PJJ ), 1, QBUF, 1, C, S )
             ELSE IF( MYCOL.EQ.NJCOL ) THEN
-               call irecv_dbl( QBUF,      NP,
+               call irecv_dbl_C( QBUF,      NP,
      &              PJCOL+1, REQ(2), y_COMM_WORLD )
-               call isend_dbl( Q(1, NJJ), NP,
+               call isend_dbl_C( Q(1, NJJ), NP,
      &              PJCOL+1, REQ(1), y_COMM_WORLD )
-               call waitall_dbl( 2, REQ )
+               call waitall_dbl_C( 2, REQ )
                CALL DROT( NP, QBUF, 1, Q( 1, NJJ ), 1, C, S )
             END IF
 !$OMP END MASTER

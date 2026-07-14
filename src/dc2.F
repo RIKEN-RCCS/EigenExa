@@ -256,7 +256,7 @@
 !$OMP END PARALLEL
         end if
         if (TRD_nnod > 1) then
-          call bcast_dbl(d(1), n, 1, 1, TRD_COMM_WORLD)
+          call bcast_dbl_C(d(1), n, 1, 1, TRD_COMM_WORLD)
         end if
 #if TIMER_PRINT>1
         d2 = eigen_get_wtime()
@@ -265,7 +265,7 @@
 
       else
 
-        call barrier(TRD_COMM_WORLD)
+        call barrier_C(TRD_COMM_WORLD)
 
         if (USE_MY_REDIST) then
 #if TIMER_PRINT>1
@@ -304,7 +304,7 @@
 !$      local_size = omp_get_num_threads()
 !$      local_rank = omp_get_thread_num()
 !$      if (local_rank == 0) then
-          call bcast_dbl(d(1), n, 1, 1, TRD_COMM_WORLD)
+          call bcast_dbl_C(d(1), n, 1, 1, TRD_COMM_WORLD)
 !$      end if
         if (.not.use_my_redist) then
           i_2=1

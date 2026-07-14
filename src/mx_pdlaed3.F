@@ -350,7 +350,7 @@
      &     K, MPI_DOUBLE_PRECISION,
      &     MPI_PROD, TRD_COMM_WORLD, ERR_MPI )
 #else
-          call ALLREDUCE_binary_prod(
+          call ALLREDUCE_binary_prod_C(
      &         TRD_COMM_WORLD,K, Z( 1 ), BUF( 1 ))
 #endif
 !$OMP END MASTER
@@ -392,7 +392,7 @@
      &        MYKL, MPI_DOUBLE_PRECISION,
      &        MPI_SUM, x_COMM_WORLD, ERR_MPI )
 #else
-          call ALLREDUCE_binary_sum(
+          call ALLREDUCE_binary_sum_C(
      &         x_COMM_WORLD,MYKL,BUF( 2*K+1 ), BUF( K+1 ))
 #endif
       END IF
@@ -432,7 +432,7 @@
      &     K, MPI_DOUBLE_PRECISION,
      &     MPI_SUM, y_COMM_WORLD, ERR_MPI )
 #else
-          call ALLREDUCE_binary_sum(
+          call ALLREDUCE_binary_sum_C(
      &         y_COMM_WORLD,K,BUF( 2*K+1 ), BUF( K+1 ))
 #endif
 !     

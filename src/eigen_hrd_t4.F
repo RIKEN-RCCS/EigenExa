@@ -65,7 +65,7 @@
        tr(1) =  anorm2
        tr(2) =  DBLE(a_n)
        tr(3) =  DIMAG(a_n)
-       call reduce_dbl(tr(1), sr(1), 3, 1, x_COMM_WORLD)
+       call reduce_dbl_C(tr(1), sr(1), 3, 1, x_COMM_WORLD)
        anorm2 =  tr(1)
        a_n    =  DCMPLX(tr(2), tr(3))
 

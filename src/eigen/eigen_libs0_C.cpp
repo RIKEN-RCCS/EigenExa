@@ -9,6 +9,11 @@ int64_t version() {
   eigen_libs0::Eigen_Version;
 }
 namespace eigen_libs0 {
+extern "C" void eigen_init0_C(int comm, char order) {
+  eigen_init0(std::optional<MPI_Comm>(MPI_Comm_f2c(comm)),
+              std::optional<char>(order));
+}
+
 extern "C" void eigen_get_matdims0_C(
     int64_t n,
     int64_t* nx,

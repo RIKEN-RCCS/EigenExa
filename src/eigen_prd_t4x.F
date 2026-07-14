@@ -114,7 +114,7 @@
 
       y_owner_nod = eigen_owner_node   (L+1, 'Y')
       x_pos       = eigen_translate_g2l(L+1, 'X')
-      call bcastw_dbl(a(1, 1), x_pos, y_owner_nod,
+      call bcastw_dbl_C(a(1, 1), x_pos, y_owner_nod,
      &     nm, 2, u_t, 1, y_COMM_WORLD)
 
 
@@ -209,7 +209,7 @@
           k = 5
         end if
 
-        call reduce_dbl(u_t, v_t, k, 3, x_COMM_WORLD)
+        call reduce_dbl_C(u_t, v_t, k, 3, x_COMM_WORLD)
 
       endif
 
@@ -218,7 +218,7 @@
         else
           k = 5
         end if
-        call bcast_dbl(u_t, k, 1, 0, y_COMM_WORLD)
+        call bcast_dbl_C(u_t, k, 1, 0, y_COMM_WORLD)
 
         t11 = u_t(1)
         t12 = u_t(2)
@@ -357,7 +357,7 @@
       end if
 
       x_pos = eigen_translate_g2l(L+1, 'X')
-      call datacast_dbl2(u_y(1, 1), u_y(1, 2),
+      call datacast_dbl2_C(u_y(1, 1), u_y(1, 2),
      &     u_x(1, 1), u_x(1, 2), v_t, u_t, L+1, 1)
 
       call eigen_vector_zeropad_x(u_x(1, 1), L+1)

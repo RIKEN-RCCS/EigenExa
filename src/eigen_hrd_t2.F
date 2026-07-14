@@ -109,7 +109,7 @@
 !$OMP MASTER
 
 #if USE_SYNC
-          call barrier( x_COMM_WORLD )
+          call barrier_C( x_COMM_WORLD )
 #endif
 
           if ( TRD_nnod > 1 ) then

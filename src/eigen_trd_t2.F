@@ -424,30 +424,30 @@
         if (x_nnod > 1) then
 
           j_1 = y_pos
-          call pack1_dbl(anorm2,  v_t, j_1)
-          call pack1_dbl(a_n,     v_t, j_1)
-          call pack1_dbl(prod_uv, v_t, j_1)
-          call pack1_dbl(d_n,     v_t, j_1)
-          call pack1_dbl(prod_ua, v_t, j_1)
-          call pack1_dbl(d_out,   v_t, j_1)
+          call pack1_dbl_C(anorm2,  v_t, j_1)
+          call pack1_dbl_C(a_n,     v_t, j_1)
+          call pack1_dbl_C(prod_uv, v_t, j_1)
+          call pack1_dbl_C(d_n,     v_t, j_1)
+          call pack1_dbl_C(prod_ua, v_t, j_1)
+          call pack1_dbl_C(d_out,   v_t, j_1)
           if (num_v_ptr-1 > 0) then
-            call pack_dbl(u_nn, num_v_ptr-1, v_t, j_1)
+            call pack_dbl_C(u_nn, num_v_ptr-1, v_t, j_1)
           end if
           if (num_v_done > 0 .and. num_v_ptr > 0) then
-            call pack_dbl(v_nn, num_v_ptr, v_t, j_1)
+            call pack_dbl_C(v_nn, num_v_ptr, v_t, j_1)
           end if
           if (.not. flag_oncache) then
             if (num_v_ptr == 1) then
-              call pack1_dbl(timer_t1, v_t, j_1)
-              call pack1_dbl(timer_t2, v_t, j_1)
+              call pack1_dbl_C(timer_t1, v_t, j_1)
+              call pack1_dbl_C(timer_t2, v_t, j_1)
             end if
           end if
           if (num_v_done > 0) then
-            call pack_dbl(u_t, 4*num_v_done, v_t, j_1)
+            call pack_dbl_C(u_t, 4*num_v_done, v_t, j_1)
           end if
  
 ! nv + 6 + (m1-1) + m1 + 2+ 4*(m-m1) = nv + 4*m - 2*m1 + 7 <= nv+4*m+7
-          call reduce_dbl(v_t, u_t, j_1, 1, x_COMM_WORLD)
+          call reduce_dbl_C(v_t, u_t, j_1, 1, x_COMM_WORLD)
 
 #if DEBUG
       if ( local_rank ==0 .and. TRD_inod == 1 )
@@ -455,26 +455,26 @@
 #endif
 
           j_1 = y_pos
-          call unpack1_dbl(anorm2,  v_t, j_1)
-          call unpack1_dbl(a_n,     v_t, j_1)
-          call unpack1_dbl(prod_uv, v_t, j_1)
-          call unpack1_dbl(d_n,     v_t, j_1)
-          call unpack1_dbl(prod_ua, v_t, j_1)
-          call unpack1_dbl(d_out,   v_t, j_1)
+          call unpack1_dbl_C(anorm2,  v_t, j_1)
+          call unpack1_dbl_C(a_n,     v_t, j_1)
+          call unpack1_dbl_C(prod_uv, v_t, j_1)
+          call unpack1_dbl_C(d_n,     v_t, j_1)
+          call unpack1_dbl_C(prod_ua, v_t, j_1)
+          call unpack1_dbl_C(d_out,   v_t, j_1)
           if ( num_v_ptr-1 > 0 ) then
-            call unpack_dbl(u_nn, num_v_ptr-1, v_t, j_1)
+            call unpack_dbl_C(u_nn, num_v_ptr-1, v_t, j_1)
           end if
           if (num_v_done > 0 .and. num_v_ptr > 0) then
-            call unpack_dbl(v_nn, num_v_ptr, v_t, j_1)
+            call unpack_dbl_C(v_nn, num_v_ptr, v_t, j_1)
           end if
           if (.not. flag_oncache) then
             if (num_v_ptr == 1) then
-              call unpack1_dbl(timer_t1, v_t, j_1)
-              call unpack1_dbl(timer_t2, v_t, j_1)
+              call unpack1_dbl_C(timer_t1, v_t, j_1)
+              call unpack1_dbl_C(timer_t2, v_t, j_1)
             end if
           end if
           if (num_v_done > 0) then
-            call unpack_dbl(u_t, 4*num_v_done, v_t, j_1)
+            call unpack_dbl_C(u_t, 4*num_v_done, v_t, j_1)
           end if
 
         end if
@@ -531,21 +531,21 @@
         if (y_nnod > 1) then
 
           j_1 = 4*num_v_done
-          call pack1_dbl(anorm2,         u_t, j_1)
-          call pack1_dbl(prod_uv,        u_t, j_1)
-          call pack1_dbl(prod_ua,        u_t, j_1)
-          call pack1_dbl(d_n,            u_t, j_1)
-          call pack1_dbl(v_n,            u_t, j_1)
-          call pack_dbl (v_x,     x_pos, u_t, j_1)
+          call pack1_dbl_C(anorm2,         u_t, j_1)
+          call pack1_dbl_C(prod_uv,        u_t, j_1)
+          call pack1_dbl_C(prod_ua,        u_t, j_1)
+          call pack1_dbl_C(d_n,            u_t, j_1)
+          call pack1_dbl_C(v_n,            u_t, j_1)
+          call pack_dbl_C (v_x,     x_pos, u_t, j_1)
           if (.not. flag_oncache) then
             if (num_v_ptr == 1) then
-              call pack1_dbl(timer_t1,   u_t, j_1)
-              call pack1_dbl(timer_t2,   u_t, j_1)
+              call pack1_dbl_C(timer_t1,   u_t, j_1)
+              call pack1_dbl_C(timer_t2,   u_t, j_1)
             end if
           end if
 
 ! 1 + 4*m + 5 + nv + 2 = nv + 4*m + 8
-          call reduce_dbl(u_t, v_t, j_1, 2, y_COMM_WORLD)
+          call reduce_dbl_C(u_t, v_t, j_1, 2, y_COMM_WORLD)
 
 #if DEBUG
       if ( local_rank ==0 .and. TRD_inod == 1 )
@@ -553,16 +553,16 @@
 #endif
 
           j_1 = 4*num_v_done
-          call unpack1_dbl(anorm2,         u_t, j_1)
-          call unpack1_dbl(prod_uv,        u_t, j_1)
-          call unpack1_dbl(prod_ua,        u_t, j_1)
-          call unpack1_dbl(d_n,            u_t, j_1)
-          call unpack1_dbl(v_n,            u_t, j_1)
-          call unpack_dbl (v_x,     x_pos, u_t, j_1)
+          call unpack1_dbl_C(anorm2,         u_t, j_1)
+          call unpack1_dbl_C(prod_uv,        u_t, j_1)
+          call unpack1_dbl_C(prod_ua,        u_t, j_1)
+          call unpack1_dbl_C(d_n,            u_t, j_1)
+          call unpack1_dbl_C(v_n,            u_t, j_1)
+          call unpack_dbl_C(v_x,     x_pos, u_t, j_1)
           if (.not. flag_oncache) then
             if (num_v_ptr == 1) then
-              call unpack1_dbl(timer_t1,   u_t, j_1)
-              call unpack1_dbl(timer_t2,   u_t, j_1)
+              call unpack1_dbl_C(timer_t1,   u_t, j_1)
+              call unpack1_dbl_C(timer_t2,   u_t, j_1)
             end if
           end if
 
@@ -1849,7 +1849,7 @@
       real(8) :: dummy(1)
 
       dummy(1) = x
-      call allgather_dbl( dummy, y, 1, 0, comm )
+      call allgather_dbl_C( dummy, y, 1, 0, comm )
 
       nz = 0
       do i=1,n
@@ -1871,7 +1871,7 @@
 
       nzz = 0
       do ii=1,m
-        call allgather_dbl( x(ii:), y, 1, 0, comm )
+        call allgather_dbl_C( x(ii:), y, 1, 0, comm )
         nz = 0
         do i=1,n
           if ( y(i) /= 0 ) nz = nz + 1
@@ -1895,7 +1895,7 @@
 
       if ( n >= 1 ) then
         y(1:n) = x(1:n)
-        call bcast_dbl( y, n, 1, 0, comm )
+        call bcast_dbl_C( y, n, 1, 0, comm )
         do i=1,n
           if ( y(i) /= x(i) ) then
              print*,"Not identical: ",name,"(",i,")@",

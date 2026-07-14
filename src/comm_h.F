@@ -108,7 +108,7 @@
                 end if
              end do
              if ( j > 0 ) then
-                call waitall_dbl( j, ireq )
+                call waitall_dbl_C( j, ireq )
              end if
              deallocate( ireq )
           else
@@ -138,7 +138,7 @@
              i = i * 2
           end do
           if ( j > 0 ) then
-             call waitall_dbl( j, ireq )
+             call waitall_dbl_C( j, ireq )
           end if
           deallocate( ireq )
 #endif
@@ -203,7 +203,7 @@
      &                             ireq(i), icom)
                 end do
                 buffer(1:n, 1) = buf(1:n, 1)
-                call waitall_dbl( px-1, ireq )
+                call waitall_dbl_C( px-1, ireq )
              else
                 if ( local_rank < px ) then
                    i = local_rank + 1
@@ -225,7 +225,7 @@
 
              if ( local_rank /=0 ) then
                 if ( local_rank < px ) then
-                   call wait_dbl( ireq(1) )
+                   call wait_dbl_C( ireq(1) )
                 end if
              end if
 

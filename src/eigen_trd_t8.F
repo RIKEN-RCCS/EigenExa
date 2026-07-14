@@ -208,8 +208,8 @@
           end if
         end do
 
-        call reduce_dbl(u_t(1), u_t(4), 3, 2, x_COMM_WORLD)
-        call reduce_dbl(u_t(1), u_t(4), 3, 2, y_COMM_WORLD)
+        call reduce_dbl_C(u_t(1), u_t(4), 3, 2, x_COMM_WORLD)
+        call reduce_dbl_C(u_t(1), u_t(4), 3, 2, y_COMM_WORLD)
 
         e_out(1) = ZERO
         e_out(2) = u_t(1)

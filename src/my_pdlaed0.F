@@ -290,7 +290,7 @@
             WORK(ID:ID+MATSIZ-1) = ZERO
          END IF
       END DO
-      call reduce_dbl( WORK, D, N, 1, TRD_COMM_WORLD )
+      call reduce_dbl_C( WORK, D, N, 1, TRD_COMM_WORLD )
       D(1:N) = WORK(1:N)
       d2 = MPI_WTIME()
       p_time0 = p_time0 + (d2-d1)
